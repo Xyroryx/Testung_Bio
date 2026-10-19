@@ -1,0 +1,2568 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Bioresonanz Test</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: ein Testbogen in einer Spalte. Oben Pferd, Datum und Bereiche (fixiert), darunter Suche und
+   Gruppen mit je einer Zeile pro Programm und drei Tasten N, + und −. Unten Fortschritt (fixiert). */
+:root{
+  --bg:#EDF1EE; --surface:#F9FBF9; --ink:#17251F; --ink-2:#50625A; --line:#D0D9D3;
+  --accent:#1F5B4C; --accent-ink:#F4FBF8;
+  --n-fill:#2E7B58; --n-on:#FFFFFF; --n-bg:#DDEFE4; --n-ink:#1D5A3E;
+  --p-fill:#B2501A; --p-on:#FFFFFF; --p-bg:#F8E2D3; --p-ink:#8E3D0F;
+  --sp-pferd:#7A4DB5; --sp-pferd-bg:#EBE2F6; --sp-hund:#0C7F8C; --sp-hund-bg:#D7EEF0; --sp-katze:#946F00; --sp-katze-bg:#F5EBC4; --spc:var(--sp-pferd); --spc-bg:var(--sp-pferd-bg);
+  --m-fill:#2A5EA8; --m-on:#FFFFFF; --m-bg:#DDE8F7; --m-ink:#1E4C8C;
+  --font-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --font-label:"IBM Plex Sans Condensed","IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#111916; --surface:#19231F; --ink:#E4EDE8; --ink-2:#9AAEA5; --line:#2A3832;
+    --accent:#6CC3A5; --accent-ink:#0B1A14;
+    --n-fill:#5CBB8B; --n-on:#06180F; --n-bg:#1B3A2B; --n-ink:#8FDDB4;
+    --p-fill:#EB9158; --p-on:#2B1203; --p-bg:#442A19; --p-ink:#F6B88E;
+  --sp-pferd:#B99AEA; --sp-pferd-bg:#33264A; --sp-hund:#5CC9D6; --sp-hund-bg:#173A3F; --sp-katze:#E3BE45; --sp-katze-bg:#43381A; --spc:var(--sp-pferd); --spc-bg:var(--sp-pferd-bg);
+    --m-fill:#72A6EA; --m-on:#06182E; --m-bg:#1B2F4C; --m-ink:#A5C6F3;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#111916; --surface:#19231F; --ink:#E4EDE8; --ink-2:#9AAEA5; --line:#2A3832;
+  --accent:#6CC3A5; --accent-ink:#0B1A14;
+  --n-fill:#5CBB8B; --n-on:#06180F; --n-bg:#1B3A2B; --n-ink:#8FDDB4;
+  --p-fill:#EB9158; --p-on:#2B1203; --p-bg:#442A19; --p-ink:#F6B88E;
+  --sp-pferd:#B99AEA; --sp-pferd-bg:#33264A; --sp-hund:#5CC9D6; --sp-hund-bg:#173A3F; --sp-katze:#E3BE45; --sp-katze-bg:#43381A; --spc:var(--sp-pferd); --spc-bg:var(--sp-pferd-bg);
+  --m-fill:#72A6EA; --m-on:#06182E; --m-bg:#1B2F4C; --m-ink:#A5C6F3;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+body{
+  background:var(--bg);color:var(--ink);
+  font:15px/1.4 var(--font-body);
+  max-width:760px;margin:0 auto;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:0 104px;
+}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* Kopf */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-top:10px;border-bottom:1px solid var(--line)}
+.who{display:flex;gap:8px;flex-wrap:wrap}
+.who [hidden]{display:none!important}
+.whoro{display:flex;align-items:center;gap:10px;min-height:44px;flex:1 1 auto;min-width:0}
+.whoro .wn{font:600 18px/1.2 var(--font-label);overflow-wrap:anywhere}
+.whoro .wd{color:var(--ink-2);font-size:14px;margin-left:auto;white-space:nowrap}
+.erow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.erow .field{flex:1 1 140px;min-width:0}
+.field{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:9px 12px;min-height:44px;font-size:16px;color:var(--ink);min-width:0;width:100%}
+.field::placeholder{color:var(--ink-2)}
+#horse{flex:1 1 140px;width:auto}
+.sp{display:flex;gap:0;flex:0 0 auto}
+.sp button{min-height:44px;padding:0 14px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink-2);font:600 14px var(--font-label)}
+.sp button:first-child{border-radius:8px 0 0 8px}
+.sp button:last-child{border-radius:0 8px 8px 0}
+.sp button:not(:first-child){border-left:0}
+.sp button[aria-pressed="true"]{background:var(--spc);border-color:var(--spc);color:var(--bg)}
+.sp button[data-species="pferd"]{--spc:var(--sp-pferd)}
+.sp button[data-species="hund"]{--spc:var(--sp-hund)}
+.sp button[data-species="katze"]{--spc:var(--sp-katze)}
+body[data-sp="pferd"]{--spc:var(--sp-pferd);--spc-bg:var(--sp-pferd-bg)}
+body[data-sp="hund"]{--spc:var(--sp-hund);--spc-bg:var(--sp-hund-bg)}
+body[data-sp="katze"]{--spc:var(--sp-katze);--spc-bg:var(--sp-katze-bg)}
+.top{border-top:5px solid var(--spc)}
+.srow[data-sp="pferd"]{--spc:var(--sp-pferd);--spc-bg:var(--sp-pferd-bg)}
+.srow[data-sp="hund"]{--spc:var(--sp-hund);--spc-bg:var(--sp-hund-bg)}
+.srow[data-sp="katze"]{--spc:var(--sp-katze);--spc-bg:var(--sp-katze-bg)}
+div.srow[data-sp]{background:var(--spc-bg);border-left:6px solid var(--spc)}
+div.srow.cur[data-sp]{padding-left:7px}
+.sbadge{display:inline-block;align-self:flex-start;margin-bottom:2px;padding:1px 8px;border-radius:5px;background:var(--spc);color:var(--bg);font:700 12px var(--font-label)}
+.btn.primary.sp-pferd{background:var(--sp-pferd);border-color:var(--sp-pferd);color:var(--bg)}
+.btn.primary.sp-katze{background:var(--sp-katze);border-color:var(--sp-katze);color:var(--bg)}
+.btn.primary.sp-hund{background:var(--sp-hund);border-color:var(--sp-hund);color:var(--bg)}
+#date{flex:0 0 auto;width:auto}
+.tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));margin-top:6px}
+.tab{background:none;border:0;border-bottom:3px solid transparent;padding:8px 1px 6px;min-height:50px;color:var(--ink-2);font:600 13px/1.2 var(--font-label);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.tc{font:400 11px/1.1 var(--font-mono);color:var(--ink-2);white-space:nowrap}
+
+/* Werkzeuge */
+.tools{display:flex;flex-direction:column;gap:10px;padding:12px 0}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:0 14px;min-height:40px;font:500 14px var(--font-body);color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.legend{margin:0;color:var(--ink-2);font-size:13px;display:flex;gap:6px 12px;flex-wrap:wrap;align-items:center}
+.lg{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;border-radius:5px;font:600 13px var(--font-mono);margin-right:4px}
+.lg-n{background:var(--n-bg);color:var(--n-ink)}
+.lg-p{background:var(--p-bg);color:var(--p-ink)}
+.lg-m{background:var(--m-bg);color:var(--m-ink)}
+
+/* Liste */
+#list,.stack{display:flex;flex-direction:column;gap:8px}
+.grp{background:var(--surface);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.grp>summary{list-style:none;display:flex;align-items:center;gap:10px;padding:10px 12px;min-height:54px;cursor:pointer}
+.grp>summary::-webkit-details-marker{display:none}
+.gl{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:1px}
+.gname{font:600 16px/1.25 var(--font-label);overflow-wrap:anywhere}
+.grange{font:400 12px var(--font-mono);color:var(--ink-2)}
+.gright{display:flex;align-items:center;gap:6px;flex:0 0 auto}
+.gc{font:500 13px var(--font-mono);color:var(--ink-2);font-variant-numeric:tabular-nums}
+.gb{font:600 12px var(--font-mono);border-radius:5px;padding:2px 6px}
+.gb-p{background:var(--p-bg);color:var(--p-ink)}
+.gb-m{background:var(--m-bg);color:var(--m-ink)}
+.gb-b{background:linear-gradient(90deg,var(--p-bg),var(--m-bg));color:var(--ink)}
+.chev{flex:0 0 auto;width:8px;height:8px;border-right:2px solid var(--ink-2);border-bottom:2px solid var(--ink-2);transform:rotate(-45deg);transition:transform .15s;margin:0 4px 0 2px}
+details[open]>summary .chev{transform:rotate(45deg)}
+.row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 12px;align-items:center;padding:8px 12px;border-top:1px solid var(--line)}
+.grp.single .row{border-top:0}
+.row[data-state="+"]{background:var(--p-bg)}
+.row[data-state="-"]{background:var(--m-bg)}
+.row[data-state="b"]{background:linear-gradient(90deg,var(--p-bg),var(--m-bg))}
+.row[data-state="b"] .code::after{content:" · bipolar";font-weight:600;color:var(--ink)}
+.lbl{min-width:0;display:flex;flex-direction:column;gap:1px}
+.lbl.lv1{padding-left:10px}
+.lbl.lv2{padding-left:20px}
+.lbl.hd .name{font-weight:600}
+.code{font:500 12px var(--font-mono);color:var(--ink-2);letter-spacing:.02em}
+.name{font-size:15px;line-height:1.3;overflow-wrap:anywhere}
+.seg{display:flex;gap:4px}
+.seg button{width:44px;height:44px;border-radius:8px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink-2);font:600 18px var(--font-mono);padding:0}
+.seg button[data-v="N"][aria-pressed="true"]{background:var(--n-fill);border-color:var(--n-fill);color:var(--n-on)}
+.seg button[data-v="+"][aria-pressed="true"]{background:var(--p-fill);border-color:var(--p-fill);color:var(--p-on)}
+.seg button[data-v="-"][aria-pressed="true"]{background:var(--m-fill);border-color:var(--m-fill);color:var(--m-on)}
+.gacts{display:flex;gap:8px;flex-wrap:wrap;padding:8px 12px;border-top:1px solid var(--line)}
+.btn{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:0 14px;min-height:44px;font:500 15px var(--font-body);color:var(--ink)}
+.btn.sm{min-height:38px;font-size:14px}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
+.btn.danger{color:var(--p-ink);border-color:var(--p-fill)}
+.empty{padding:28px 4px;text-align:left;color:var(--ink-2);display:flex;flex-direction:column;gap:12px;align-items:flex-start}
+.empty p{margin:0;max-width:46ch}
+
+/* Auswertung und Verlauf */
+.panel{display:flex;flex-direction:column;gap:14px;padding:14px 0}
+.panel h2{margin:0;font:600 20px/1.2 var(--font-label)}
+.panel h3{margin:0;font:600 16px/1.2 var(--font-label);display:flex;align-items:center;gap:8px}
+.meta{margin:0;color:var(--ink-2)}
+.tag{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;border-radius:6px;font:600 14px var(--font-mono)}
+.tag-p{background:var(--p-fill);color:var(--p-on)}
+.tag-m{background:var(--m-fill);color:var(--m-on)}
+.tag-b{background:var(--surface);color:var(--ink);border:2px solid var(--p-fill);border-right-color:var(--m-fill);border-bottom-color:var(--m-fill)}
+.cnt{font:500 13px var(--font-mono);color:var(--ink-2)}
+.none{margin:0;color:var(--ink-2)}
+.lab{font:600 14px var(--font-label);color:var(--ink-2);text-transform:uppercase;letter-spacing:.06em}
+textarea.field{resize:vertical;line-height:1.45}
+#exp{font:400 13px/1.5 var(--font-mono)}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.msg{margin:0;color:var(--ink-2);font-size:14px;min-height:1.4em}
+.srow{background:var(--surface);border:1px solid var(--line);border-radius:8px;display:flex;flex-direction:column;gap:8px;padding:10px 12px}
+.srow.cur{border-color:var(--accent);border-width:2px;padding:9px 11px}
+.sopen{background:none;border:0;padding:0;text-align:left;display:flex;flex-direction:column;gap:2px;min-height:44px;justify-content:center}
+.sh{font:600 17px/1.25 var(--font-label);overflow-wrap:anywhere}
+.sm{color:var(--ink-2);font-size:14px;font-variant-numeric:tabular-nums}
+.sacts{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.warn{margin:0;font-size:14px;color:var(--ink-2)}
+
+/* Fuß */
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:4;background:var(--surface);border-top:1px solid var(--line);
+  padding:8px max(16px,env(safe-area-inset-right,0px)) calc(8px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.barin{max-width:728px;margin:0 auto;display:flex;flex-direction:column;gap:7px}
+.prog{height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.prog span{display:block;height:100%;background:var(--accent);width:0}
+.barrow{display:flex;gap:6px 12px;align-items:center;flex-wrap:wrap}
+.bt{font:500 14px var(--font-mono);font-variant-numeric:tabular-nums}
+.bds{display:flex;gap:6px}
+.bd{font:600 12px var(--font-mono);border-radius:5px;padding:2px 6px;font-variant-numeric:tabular-nums}
+.bd-p{background:var(--p-bg);color:var(--p-ink)}
+.bd-m{background:var(--m-bg);color:var(--m-ink)}
+.bd-b{background:linear-gradient(90deg,var(--p-bg),var(--m-bg));color:var(--ink)}
+.bd-n{background:var(--n-bg);color:var(--n-ink)}
+.sv{margin-left:auto;font-size:13px;color:var(--ink-2)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+#printarea{display:none}
+@media print{
+  body>*:not(#printarea){display:none!important}
+  #printarea{display:block!important;color:#000;background:#fff;font:11pt/1.3 Arial,Helvetica,sans-serif}
+  #printarea h1{font-size:16pt;margin:0 0 4mm}
+  #printarea p{margin:0 0 2mm}
+  #printarea table{width:100%;border-collapse:collapse;margin-top:4mm}
+  #printarea th{background:#e4e4e4;text-align:left;padding:1.5mm;font-size:9pt}
+  #printarea td{border-bottom:.3pt solid #bbb;padding:1.5mm;font-size:9.5pt;vertical-align:top}
+  #printarea tr{break-inside:avoid}
+  #printarea .c{width:9mm;text-align:center}
+  #printarea .bx{display:inline-block;width:4mm;height:4mm;border:.5pt solid #444;line-height:4mm;font-weight:700;text-align:center;font-size:10pt}
+  @page{size:A4;margin:15mm}
+}
+</style>
+
+<header class="top">
+  <div class="who">
+    <input id="horse" class="field" type="text" placeholder="Name des Pferdes" autocomplete="off" aria-label="Name des Patienten">
+    <div class="sp" role="group" aria-label="Tierart"><button type="button" data-species="pferd">Pferd</button><button type="button" data-species="hund">Hund</button><button type="button" data-species="katze">Katze</button></div>
+    <input id="date" class="field" type="date" aria-label="Testdatum">
+    <div class="whoro" id="whoro"></div>
+  </div>
+  <nav class="tabs" role="tablist" aria-label="Bereiche">
+    <button type="button" class="tab" role="tab" data-view="sess"><span>Patienten</span><span class="tc" id="c-sess"></span></button>
+    <button type="button" class="tab" role="tab" data-view="std"><span>Standard</span><span class="tc" id="c-std"></span></button>
+    <button type="button" class="tab" role="tab" data-view="phys"><span id="l-phys">Physio Pferd</span><span class="tc" id="c-phys"></span></button>
+    <button type="button" class="tab" role="tab" data-view="path"><span id="l-path">Patho Pferd</span><span class="tc" id="c-path"></span></button>
+    <button type="button" class="tab" role="tab" data-view="sum"><span>Auswertung</span><span class="tc" id="c-sum"></span></button>
+  </nav>
+</header>
+<main id="main"></main>
+<div id="printarea" aria-hidden="true"></div>
+<footer class="bar">
+  <div class="barin">
+    <div class="prog" id="prog" role="progressbar" aria-label="Fortschritt" aria-valuemin="0"><span id="progfill"></span></div>
+    <div class="barrow">
+      <span class="bt" id="b-done"></span>
+      <span class="bds"><span class="bd bd-p" id="b-p"></span><span class="bd bd-m" id="b-m"></span><span class="bd bd-b" id="b-b" hidden></span><span class="bd bd-n" id="b-n"></span></span>
+      <span class="sv" id="sv" aria-live="polite"></span>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+(function(){
+'use strict';
+
+/* ---------- Programmliste (Nummer|Bezeichnung, wie im Ausdruck) ---------- */
+var RAW={phys:`
+# Zelle und Gewebe
+88.00|Zelle und Gewebe, gesamt
+88.01|Zellkern
+88.02|Zellmembran
+88.03|Zytoplasma
+88.04|Organellen, gesamt
+# Blut
+88.05|Blut, gesamt
+88.06|Erythrozyten
+88.07|Leukozyten
+88.08|Thrombozyten
+88.09|Blutgerinnungsfaktoren
+# Immunsystem
+88.10|Immunsystem, gesamt
+# Lymphsystem
+88.15|Lymphsystem, gesamt
+88.16|Lymphbahnen
+88.17|Lymphknoten
+88.18|Tonsillen
+88.19|Peyersche Plaques
+# Kreislaufsystem
+88.20|Kreislaufsystem, gesamt
+88.21|Arterien
+88.22|Venen
+# Herz
+88.25|Herz, gesamt
+88.26|Herzschichten, gesamt
+88.27|Herzinnenräume, gesamt
+88.28|Herzklappen, gesamt
+88.29|Tricusspidalisklappe
+88.30|Pulmonalklappe
+88.31|Mitralklappe
+88.32|Aortenklappe
+88.33|Reizleitungssystem, gesamt
+# Atemwege
+88.35|Atemwege, gesamt
+88.36|Nasennebenhöhle, gesamt
+88.37|Kehlkopf, gesamt
+88.38|Bronchien, gesamt
+88.39|Lunge
+# Niere / Harnorgane
+88.40|Niere / Harnorgane, gesamt
+88.41|Niere, gesamt
+88.42|Harnorgane, gesamt
+88.43|Harnblase
+88.44|Schließmuskel
+# Verdauungssystem
+88.45|Verdauungssystem, gesamt
+88.46|Magen
+88.47|Dünndarm, gesamt
+88.48|Dickdarm
+88.49|After/ Analdrüse
+# Leber / Galle / Bauchspeicheldrüse
+88.50|Leber / Galle / Bauchspeicheldrüse, gesamt
+88.51|Leber, gesamt
+88.52|Bauchspeicheldrüse gesamt
+# Stoffwechsel
+88.55|Stoffwechsel, gesamt
+88.56|Eiweißstoffwechsel
+88.57|Kohlenhydratstoffwechsel
+88.58|Fettstoffwechsel
+# Bewegungsapparat
+88.60|Bewegungsapparat, gesamt
+88.61|Skelett, gesamt
+88.62|Muskulatur gesamt
+88.63|Wirbelsäule gesamt
+88.64|Bandscheiben, gesamt
+# Nervensystem
+88.65|Nervensystem, gesamt
+88.66|Zentralnervensystem, gesamt
+88.67|Peripheres Nervensystem, gesamt
+# Sehorgan
+88.70|Sehorgan, gesamt
+88.71|Tränendrüse, Tränenröhrchen gesamt
+88.72|Häute, gesamt
+88.73|Linse, Pupille, Glaskörper gesamt
+88.74|Sehnerven, gesamt
+# Hörorgan / Gleichgewichtsorgan
+88.75|Hörorgan / Gleichgewichtsorgan, gesamt
+88.76|Äußeres Ohr, gesamt
+88.77|Mittelohr, gesamt
+88.78|Innenohr, gesamt
+# Haut / Fell
+88.80|Haut / Fell, gesamt
+88.81|Haut gesamt
+88.82|Hautdrüsen, gesamt
+88.83|Fell
+88.84|Hufe / Krallen
+# Hormonsystem
+88.85|Hormonsystem, gesamt
+88.86|Hypothalamus
+88.87|Hypophyse
+88.88|Schilddrüse
+88.89|Nebenschilddrüse
+88.90|Thymus
+88.91|Nebennierenmark
+88.92|Nebennierenrinde
+88.93|Eierstöcke
+88.94|Hoden
+# Weibliche Geschlechtsorgane
+88.95|Weibliche Geschlechtsorgane, gesamt
+# Männliche Geschlechtsorgane
+88.96|Männliche Geschlechtsorgane, gesamt
+# Psyche
+88.97|Psyche, gesamt
+# Stress
+88.98|Stress, gesamt
+# Zähne
+88.99|Zähne, gesamt
+`,path:`
+# Zelle und Gewebe
+96.00|Narbenentstörung
+96.01|Wundheilung
+96.02|Entgiftung Grundprogramm
+96.03|Entgiftung Impfschäden
+96.04|Entgiftung Metalle gesamt
+# Blut
+96.10|Blutungsanämie Vet
+96.11|Anämie durch gestörte Erythrozytenbildung
+96.12|Renale Anämie
+96.13|Anämie Eisenmangel
+96.14|Anämie Vit. B12 / Kobalt
+96.16|Arterielle Sauerstoffsättigung
+96.19|Entartung Knochenmark
+# Immunsystem
+96.20|Allergie gesamt
+96.21|Allergie Heu
+96.22|Allergie Stroh
+96.23|Allergie Holz
+96.24|Insektenstich
+96.25|Steigerung der Abwehrleistung
+96.26|Unspezifische Immunabwehr
+96.27|Spezifische Immunabwehr
+# Lymphsystem
+96.30|Lymphgefäßentzündung
+96.31|Lymphknotenentzündung – Schwellung
+96.32|Lymphabfluss-Störung
+96.33|Lymphödem
+96.34|Milz-Organfunktionsstörung
+96.35|Thymus-Organfunktionsstörung
+# Kreislaufsystem
+96.40|Durchblutungsstörung arteriell
+96.41|Durchblutungsstörung venös
+96.42|Blutdruckregulationsstörung
+96.43|Renale Hypertonie
+96.44|Arteriosklerose / Selenmangel
+96.45|Blutgefäßdegeneration
+96.46|Petechialfieber
+# Herz
+96.50|Myocardfibrose
+96.51|Linksherzinsuffizienz
+96.52|Rechtsherzinsuffizienz
+96.53|Cor Pulmonale
+96.54|Herzleistungsstärkung
+96.55|Psychosomatische Herzerkrankung
+# Atemwege
+96.60|Husten, akut
+96.61|Bronchitis, COB
+96.62|Asthma bronchiale, allergisch
+96.63|Verschleimung
+96.64|Pleuritis sicca / exsudatriva
+96.65|Pneumonie, bakteriell
+96.66|Dämpfigkeit
+96.67|Druse
+96.68|Kehlkopfpfeifen
+# Niere
+96.70|Niereninsuffizienz
+96.71|Zystitis
+96.72|Diabetes insipidus renalis
+96.73|Diabetes insipidus centralis
+96.74|Pyelonephritis (Nierenbeckenentzündung)
+96.75|Förderung der Diurese
+# Verdauungssystem
+96.80|Gastritis akut
+96.81|Diarrhö
+96.82|Koliken
+96.83|Kotwasser
+96.84|Ulcus ventriculi
+96.85|Ulcus duodeni
+96.86|Colon irritabile
+# Leber / Bauchspeicheldrüse
+96.90|Leberentzündung
+96.91|Leberdegeneration
+96.92|Bauchspeicheldrüse, exokrine Funktionsstörung
+96.93|Leberlipoidose
+96.94|Pankreatitis
+# Stoffwechsel
+97.00|Eiweißstoffwechselstörung
+97.01|Kohlenhydratstoffwechselstörung
+97.02|Fettstoffwechselstörung
+97.03|Equines metabolisches Syndrom
+97.04|KPU
+97.05|PSSM
+# Bewegungsapparat
+97.10|Knochenverletzung/- Bruch
+97.11|Knochenentzündung
+97.12|Verstauchung (Distorsion)
+97.13|Prellung / Bluterguss
+97.14|Muskelverspannung
+97.15|Muskelverletzung/ Faserriss
+97.16|Muskelentzündung
+97.17|Bandverletzung
+97.18|Bänderdehnung
+97.19|Bandentzündung / Sehnenscheidenentzündung
+97.20|Wirbelsäule Schmerzen / Verspannung
+97.21|Hufrehe
+97.22|Kreuzgallen
+97.23|Piephacke
+97.24|Kreuzverschlag
+97.25|Hufrollenentzündung
+97.26|Schale
+97.27|Leist
+97.28|Kissing Spine
+97.29|Spat
+97.30|Strahlfäule
+97.31|Gelenkentzündung (Arthritis)
+97.32|Gelenkdegeneration (Arthrose)
+97.33|Hufabzess
+# Nervensystem
+97.36|Headshaker
+97.37|Lähmungen, spastisch
+97.38|Lähmungen, schlaff
+97.39|Epileptiforme Anfälle
+97.40|Ataxie / Bewegungskoordinationsstörungen
+97.41|Neuritis
+97.42|Neuralgien
+# Sehorgan
+97.46|Augenbindehautentzündung / Konjunktiviltis
+97.47|Periodische Augenentzündung
+97.48|Katarakt
+97.49|Glaukom
+# Hörorgan
+97.50|Ohrspeicheldrüsenentzündung
+97.51|Ohrfistel
+97.52|Otitis media, akut (Mittelohrentzündung)
+# Haut / Fell
+97.55|Mauke
+97.56|Haarwechselstörungen hormonell
+97.57|Haarausfall allg. / juckend
+97.58|Haarausfall Mangelerscheinung
+97.59|Equines Sarkoid
+97.60|Nesselfieber
+97.61|Hautmykosen
+97.62|Kontaktekzem (allergisch)
+# Hormonsystem
+97.65|Cushing-Syndrom
+97.66|Hormonhaushalt Grundregulation Stute
+97.67|Hormonhaushalt Grundregulation Hengst
+# Weibliche Geschlechtsorgane
+97.70|Mastitis
+97.71|Eierstocksentzündung
+97.72|Beschälseuche
+97.73|Eierstockzysten
+# Männliche Geschlechtsorgane
+97.75|Hodenabstiegsstörungen
+97.76|Hodenentzündung
+97.77|Hypersexualität
+97.78|Prostatitis
+# Psyche
+97.80|Depressionen
+97.81|Psyche, Stärkung
+97.82|Anpassungsstörungen
+97.83|Panik-Attacke
+# Stress
+97.85|Stressreduktion
+97.86|Wetterfühligkeit / Sferics
+97.87|Seelischer Stress
+# Futtermittelverunreinigungen
+97.90|Futtermittelverunreinigungen gesamt
+97.91|Pathogene Hefen
+97.92|Schimmelpilze
+97.93|Mycotoxine
+97.94|Clostridien
+# Trinkwasserverunreinigungen
+97.95|Trinkwasserverunreinigungen gesamt
+97.96|Schimmelpilze
+97.97|Algen
+97.98|Clostridien
+97.99|Klebsiellen
+`,std:`
+# Analysevorbereitung
+00.00|Analysevorbereitung
+# Vitalisierung
+01.00|Vitalisierung gesamt
+-01.10|Energieaufladung
+-01.20|Polaritätsausgleich
+-01.30|Vorsteuerung
+-01.40|Chakren gesamt
+--01.41|Scheitelchakra
+--01.42|Stirnchakra
+--01.43|Halschakra
+--01.44|Herzchakra
+--01.45|Milzchakra
+--01.46|Nabelchakra
+--01.47|Wurzelchakra
+--01.50|Sirtuin genes (Jap. Langes Leben)
+# Akupunkturmeridiane
+02.00|Akupunkturmeridiane gesamt
+-02.11|Lungen-Meridian
+-02.12|Dickdarm-Meridian
+-02.13|Magen-Meridian
+-02.14|Milz-Meridian
+-02.15|Herz-Meridian
+-02.16|Dünndarm-Meridian
+-02.17|Blasen-Meridian
+-02.18|Nieren-Meridian
+-02.19|Leber-Meridian
+-02.20|Herz-Kreislauf-Meridian
+-02.21|Meridian des Dreifach-Erwärmers
+-02.22|Gallenblasen-Meridian
+-02.23|Gouverneur-Gefäß-Meridian
+-02.24|Konzeptions-Gefäß-Meridian
+# Elektrosmog
+04.00|Elektrosmog gesamt
+-04.10|Elektrische und magnetische Wechselfelder
+-04.20|Impulsmodulierte Einstrahlung / UMTS gesamt
+--04.21|Mobilfunk
+--04.22|UMTS
+--04.23|DECT (Schnurlostelefon)
+--04.24|WLAN
+--04.25|Bluetooth
+--04.26|Satellitenfunk
+--04.27|Wi Max
+--04.28|LTE
+--04.29|Tetra / BOS
+-04.30|Strahlung, Schutz
+--04.31|Ultraschall
+--04.32|Röntgenstrahlen
+--04.33|Radioaktivität
+# Geopathische Belastungen
+05.00|Geopathische Belastungen gesamt
+-05.10|Wasseradern
+-05.20|Verwerfungen
+-05.30|Gitternetze gesamt
+--05.31|Hartmann-Gitternetz-Linie
+--05.32|Hartmann-Gitternetz-Kreuzung
+--05.33|Curry-Gitternetz-Linie
+--05.34|Curry-Gitternetz-Kreuzung
+--05.35|Benker-Gitternetz-Linie
+--05.36|Benker-Gitternetz-Kreuzung
+# Säure-Basen-Haushalt
+06.00|Säure-Basen-Haushalt gesamt
+-06.10|Bindegewebe
+-06.20|Bauchspeicheldrüse
+-06.30|Leber
+-06.40|Dünndarm
+# Nährstoffe
+07.00|Nährstoffe gesamt
+-07.10|Mineralstoffe gesamt
+--07.11|Calcium
+--07.12|Kalium
+--07.13|Magnesium
+--07.14|Natrium
+-07.20|Spurenelemente gesamt
+--07.21|Eisen
+--07.22|Zink
+--07.23|Kupfer
+--07.24|Mangan
+--07.25|Molybdän
+--07.26|Jod
+--07.27|Kobalt
+--07.28|Chrom
+--07.29|Selen
+-07.30|Vitamine, fettlöslich, gesamt
+--07.31|Vitamin A
+--07.32|Vitamin D
+--07.33|Vitamin E
+--07.34|Vitamin K
+--07.35|Vitamin K1
+--07.36|Vitamin K2
+-07.40|Vitamine, wasserlöslich, gesamt
+--07.41|Vitamin C
+--07.42|Vitamin B1, Thiamin
+--07.43|Vitamin B2, Riboflavin
+--07.44|Vitamin B3, Niacin
+--07.45|Vitamin B5, Panthothensäure
+--07.46|Vitamin B6, Pyridoxin
+--07.47|Vitamin B7, Biotin
+--07.48|Vitamin B9, Folsäure
+--07.49|Vitamin B12, Cobalamin
+--07.50|Vitamin B17, Laetril
+-07.60|Probiotische Bakterien gesamt
+--07.61|Lactobacillus rhamnosus
+--07.62|Enterrococcus faecium
+--07.63|Bifidobacterium lactis
+--07.64|Bifidobacterium longum
+--07.65|Lactococcus lactis
+--07.66|Lactobacillus sporogenes
+--07.67|Lactobacillus casei
+--07.68|Lactobacillus plantarum
+--07.69|Lactobacillus acidophilus
+--07.70|Bifidobacterium infantis
+--07.71|Lactobacillus salivarius
+--07.72|Bifidobacterium bifidum
+-07.80|Fettsäuren gesamt
+--07.81|Monocarbonsäuren
+--07.82|gesättigte Fettsäuren
+--07.83|einfach ungesättigte Fettsäuren
+--07.84|mehrfach ungesättigte Fettsäuren
+--07.85|essentielle Fettsäuren
+-07.90|Rayobase
+-07.91|Rayovita
+-07.92|Rayoflora
+-07.93|Rayosole plus
+-07.94|Aethsyna Phyto ECM
+# Schadstoffe
+08.00|Schadstoffe gesamt
+-08.10|Schwermetalle gesamt
+--08.11|Palladium
+--08.12|Silber
+--08.13|Cadmium
+--08.14|Platin
+--08.15|Gold
+--08.16|Quecksilber
+--08.17|Blei
+-08.30|Spinnen- und Schlangengifte gesamt
+--08.31|Acanthoscurria geniculata / Weißknievogelspinne
+--08.32|Araneae avicularia / Avicularia avicularia / Vogelspinne
+--08.33|Araneae curcubitina / Kürbisspinne
+--08.34|Araneae diadema / Gartenkreuzspinne
+--08.35|Araneae ixobola / Schwarze Kreuzspinne
+--08.36|Araneae scinencia / Graue Spinne
+--08.37|Aranin / Schwarze Nachtspinne
+--08.38|Brachypelma smithi / Mexikanische Rotknie-Vogelspinne
+--08.39|Cheiracanthium punctorium / Ammen-Dornfinger
+--08.40|Lactrdectus hasselt / Rotrückenspinne
+--08.41|Latrodectus mactans / Schwarze Witwe
+--08.42|Tarantula cubensis / Kubanische Tarantel
+--08.43|Tegenaria atrica / Große Winkelspinne
+--08.44|Tarantula hispanica / Spanische Tarantel
+--08.45|Bothrops lanceolatus / Amerikanische Lanzenotter
+--08.46|Crotalus horridus / Waldklapperschlange
+--08.47|Lachesis / Buschmeisterschlange
+--08.48|Naja tripudians / Kobra
+--08.49|Vipera berus / Kreuzotter
+-08.50|Schädlingsbekämpfungsmittel gesamt
+--08.51|Fungizide (Pilze)
+--08.52|Herbizide (Unkraut)
+--08.53|Insektizide (Insekten)
+--08.54|Molluskizide (Schnecken)
+--08.55|Vermizide (Würmer)
+--08.56|Rodentozide (Nagetiere)
+--08.57|Akarizide (Milben)
+-08.80|Erbtoxine gesamt
+--08.81|Psorinum
+--08.82|Medorrhinum
+--08.83|Luesinum
+--08.84|Tuberculinum
+-08.85|Umweltgifte gesamt
+--08.86|Benzol
+--08.87|Benzpyren
+--08.88|DDT
+--08.89|Formaldehyd
+--08.90|Lindan
+--08.91|Pentachlorphenol (PCP)
+--08.92|Phtalate
+--08.93|Biphenyle (PCB)
+--08.94|Tabakgifte / Tabakrauch
+--08.95|Glyphosate
+# Enzyme
+09.00|Enzyme gesamt
+-09.01|Enzyme, Basis gesamt
+--09.02|Enzym, Q 10
+--09.03|Enzym, Superoxid-Dismutase
+--09.04|Enzym, Bromelain
+--09.05|Enzym, Papain
+-09.07|Enzyme, Cytochrome Entgiftung gesamt
+--09.08|Enzym, Cytochrom 1A2
+--09.09|Enzym, Cytochrom 2C9
+--09.10|Enzym, Cytochrom 2D6
+--09.11|Enzym, Cytochrom 3A4
+--09.12|Enzym, Cytochrome c Reduktase
+--09.13|Enzym, Cytochrom P450
+--09.14|Enzym, Cytochromoxidase
+--09.15|Enzym, Cytochrome
+-09.17|Enzyme, Herz gesamt
+--09.18|Enzym, CK Creatin-Kinase
+--09.19|Enzym, CK Creatin-Kinase MB
+--09.20|Enzym, Phosphodiesterase PDE 3a
+--09.21|Enzym, Angiotensin-Converting-Enzym
+-09.23|Enzyme, Atemwege gesamt
+--09.24|Enzym, Phosphodiesterase 4
+--09.25|Enzym, Neprilysin 1
+--09.26|Enzym, Neprilysin 2
+-09.28|Enzyme, Niere / Harnorgane gesamt
+--09.29|Enzym, Renin
+--09.30|Enzym, Kallikrein
+--09.31|Enzym, Neprilysin 1
+--09.32|Enzym, Neprilysin 2
+-09.34|Enzyme, Verdauungssystem gesamt
+--09.35|Enzym, Ptyalin (Mundhöhle)
+--09.36|Enzym, Amylase (Magen)
+--09.37|Enzym, Pepsin (Magen)
+--09.38|Enzym, Magenlipase (Magen)
+--09.39|Enzym, Peptidasen (Dünndarm)
+--09.40|Enzym, Peptidase extrazellulär (Dünndarm)
+--09.41|Enzym, Peptidase intrazellulär (Dünndarm)
+--09.42|Enzym, Disaccharidasen-Glycosidase (Dünndarm)
+--09.43|Enzym, Laktase-beta 1-Galactosidase (Dünndarm)
+--09.44|Enzym, Maltase (Dünndarm)
+--09.45|Enzym, PEPC 1 (Dünndarm)
+-09.47|Enzyme, Leber / Galle / Bauchspeicheldrüse gesamt
+--09.48|Enzym, Gamma-Glutamyltransferase (Leber)
+--09.49|Enzym, Glutamat-Oxalacetat-Transaminase GOT (Leber)
+--09.50|Enzym, Glutamat-Pyrovat-Transaminase Leber GPT 1
+--09.51|Enzym, Glutamat-Pyruvat-Transaminase Leber GPT 2
+--09.52|Enzym, Alkalische Phosphatase (Galle)
+--09.53|Enzym, Pancreas: Trypsin (Bauchspeicheldrüse)
+--09.54|Enzym, Chymotrypsin (Bauchspeicheldrüse)
+--09.55|Enzym, Chymotrypsinogen (Bauchspeicheldrüse)
+--09.56|Enzym, Carboxypeptidase (Bauchspeicheldrüse)
+--09.57|Enzym, Carboxypeptidase A (Bauchspeicheldrüse)
+--09.58|Enzym, Carboxypeptidase B (Bauchspeicheldrüse)
+--09.59|Enzym, Elastase (Bauchspeicheldrüse)
+--09.60|Enzym, DNA-Ligase (Bauchspeicheldrüse)
+--09.61|Enzym, Ribonuclease (Bauchspeicheldrüse)
+--09.62|Enzym, Pankreasamylase (Bauchspeicheldrüse)
+-09.64|Enzyme, Stoffwechsel gesamt
+--09.65|Enzym, Uridyltransferase (KH)
+--09.66|Enzym, Hormonsensitive Lipase (F)
+--09.67|Enzym, Peptidyl-Arginin-Deiminase (E)
+--09.68|Enzym, Homocystein
+-09.69|Enzyme, Bewegungsapparat gesamt
+--09.70|Enzym, Aldenylat-Kinase
+--09.71|Enzym, CK Creatin-Kinase allgemein
+--09.72|Enzym, CK Creatin-Kinase MM
+--09.73|Enzym, Peptidyl-Arginin-Deiminase
+--09.74|Enzym, Hyaloronidase
+-09.75|Enzyme, Nervensystem gesamt
+--09.76|Enzym, Tryptophan-Hydroxylase 1
+--09.77|Enzym, Tryptophan-Hydroxylase 2
+--09.78|Enzym, Purin-Nucleosid-Phosphorylase
+--09.79|Enzym, CK Creatin-Kinase allgemein
+--09.80|Enzym, Neprilysin 1
+--09.81|Enzym, Neprilysin 2
+-09.83|Enzyme, Haut / Haare gesamt
+--09.84|Enzym, Tyrosinase (UV-Schutz)
+-09.86|Enzyme, Schilddrüsenstoffwechsel
+--09.87|Enzym, 4-Hydroxyphenylpyrovat-Dioxigenase
+--09.88|Enzym, Aldehyd-Dehydrogenase ALDH
+--09.89|Enzym, Diamino-Oxidase
+--09.90|Enzym, Dopachrom, L-Dopachrom-Isomerase
+--09.91|Enzym, Dopa-Decarboxylase
+--09.92|Enzym, Fumaryacetoacetase
+--09.93|Enzym, Homogentisat-1,2 Dioxygenase
+--09.94|Enzym, Maleylacetoacetat-Isomerase
+--09.95|Enzym, Monoamino-Oxidase
+--09.96|Enzym, Tyrosinase (UV-Schutz)
+--09.97|Enzym, alkalische Phosphatase
+# Aminosäuren
+10.00|Aminosäuren gesamt
+-10.10|Essentielle Aminosäuren gesamt
+--10.11|L-Isoleucin
+--10.12|L-Leucin
+--10.13|L-Lysin
+--10.14|L-Methionin
+--10.15|L-Phenyalanin
+--10.16|L-Threonin
+--10.17|L-Tryotophan
+--10.18|L-Valin
+-10.30|Nicht- essentielle Aminosäuren gesamt
+--10.31|L-Alanin
+--10.32|L-Arginin (semi-essentiell)
+--10.33|L-Asparagin
+--10.34|L-Asparaginsäure
+--10.35|L-Cystein
+--10.36|L-Glutamin
+--10.37|L-Glutaminsäure
+--10.38|L-Glycin
+--10.39|L-Histidin (semi-essentiell)
+--10.40|L-Prolin
+--10.41|L-Serin
+--10.42|L-Tyrosin
+# Bakterien I
+20.00|Bakterien gesamt
+20.05|Bakterien I gesamt
+-20.10|Kokken gesamt
+--20.11|Alpha streptococcus
+--20.12|Beta hämolysierende Streptokokken
+--20.13|Eikenella corrodens
+--20.14|Gaffkya tetragena
+--20.15|Meningokokken
+--20.16|MRSA-Multi-resistente V
+--20.17|Neisseria gonorrhoea
+--20.18|Staphylokokken
+--20.19|Staphylococcus aureus
+--20.20|Streptokokken
+--20.21|Streptococcus lactis
+--20.22|Streptococcus mitis
+--20.23|Streptococcus pneumoniae
+--20.24|Streptococcus pyogenes
+--20.25|Streptococcus sp.
+--20.26|Veillonella dispar
+--20.27|Moraxella
+--20.28|Scarlatinum (Scharlach)
+--20.29|Streptococcus salivarius
+-20.40|Stäbchen gesamt
+--20.41|Actinobacillen (suis) V
+--20.42|Actinomyces israelii
+--20.43|Arcanobacterium pyogenes
+--20.44|Bazillen
+--20.45|Bacillus anthracis V
+--20.46|Bacillus cereus
+--20.47|Bacteroides fragilis
+--20.48|Bordetella bronchiseptica V
+--20.49|Bordetella pertussis
+--20.50|Brucella abortus V
+--20.51|Brucella melitensis V
+--20.52|Brucella suis V
+--20.53|Coxiella burnetii V
+--20.54|Clostridien
+--20.55|Clostridium botulinum V
+--20.56|Clostridium feseri V
+--20.57|Clostridium perfringens
+--20.58|Clostridium septicum
+--20.59|Clostridium tetani V
+--20.60|Corynebacterium diphteriae
+--20.61|Corynebacterium xerosis
+--20.62|Cytophaga rubra
+--20.63|Erysipelotrix rhusiopathiae V
+--20.64|Eubacterium suis
+--20.65|Francisella tularensis V
+--20.66|Gardnerella vaginalis
+--20.67|Haemophilus influenzae
+--20.68|Haemophilus parasuis V
+--20.69|Helicobacter pylori
+--20.70|Lactobacillus acidophilus
+--20.71|Lawsonia intracellularis
+--20.72|Legionella pneumophila
+--20.73|Listeria monocytogenes V
+--20.74|Malleomyces mallei V
+--20.75|Mycobacterium phlei
+--20.76|Mycobacterium tuberculosis
+--20.77|Nocardien V
+--20.78|Nocardia asteroides
+--20.79|Pasteurellen V
+--20.80|Pasteurella multocida V
+--20.81|Propionbacterium acnes
+--20.82|Pseudomonas aeruginosa
+--20.83|Bartonella henselae
+--20.84|Fusobakterium necrophorum V
+--20.85|Spirillum serpens
+--20.86|Sphaerotilus natans
+--20.87|Acinetobacter baumanii
+--20.88|Acitenobacter haemolytica
+--20.89|Acitenobacter johnsonii
+--20.90|Acitenobacter junii
+--20.91|Acitenobacter iwoffii
+--20.92|Actinomyces viscosus
+--20.93|Treponema denticola
+--20.94|Campylobacter rectus / showae
+--20.95|Porphyromonea gingivales
+--20.96|Prevotella intermedia
+--20.97|Tannerella forsythensis
+--20.98|Aggregatibacter actinomyces
+--20.99|Fusubakterium mucleatum
+# Bakterien II
+21.05|Bakterien II gesamt
+-21.10|Enterobacteriaceae gesamt
+--21.11|Enterobacter aerogenes
+--21.12|Erwinia amylovora
+--21.13|Erwinia carotovora
+--21.14|Escherichia coli
+--21.15|Klebsiella pneumoniae
+--21.16|Proteus mirabilis
+--21.17|Proteus vulgaris
+--21.18|Salmonellen
+--21.19|Salmonella enteritidis
+--21.20|Salmonella paratyphi
+--21.21|Salmonella typhi
+--21.22|Serratia marcescens
+--21.23|Shigella dysenteriae
+--21.24|Shigella flexneri
+--21.25|Shigella sonnei
+--21.26|Yersinien V
+--21.27|Yersinia enterocolitica
+--21.28|EHEC
+-21.50|Mycoplasmen gesamt
+--21.51|Mycoplasma
+--21.52|Mycoplasma agalactiae V
+--21.53|Mycoplasma capricolum
+--21.54|Mycoplasma mycoides V
+-21.60|Spiralig, gewundene Bakterien gesamt
+--21.61|Borrelien
+--21.62|Brachyspira V
+--21.63|Leptospira canicola V
+--21.64|Leptospira grippotyphosa V
+--21.65|Leptospira icterohaemorrhagiae
+--21.66|Leptospira interrogans
+--21.67|Leptospira pomona V
+--21.68|Leptospiren (suis) V
+--21.69|Treponema pallidum
+--21.70|Borrelia afzelli
+--21.71|Borrelia burgdorferi
+--21.72|Borrelia duttoni
+--21.73|Borrelia garinii
+--21.74|Borrelia hermsii
+-21.80|Intrazelluläre Bakterien (Zellparasiten) gesamt
+--21.81|Anaplasma marginale
+--21.82|Chlamydien
+--21.83|Chlamydien (feline) V
+--21.84|Chlamydia ovis V
+--21.85|Chlamydia psittaci V
+--21.86|Chlamydia trachomatis
+--21.87|Cowdria ruminantium V
+--21.88|Rickettsien
+--21.89|Babesia divergens
+-21.90|Weitere Bakterien gesamt
+--21.91|Bakterien laryndiale
+--21.92|Borrelien-Toxin
+--21.93|Kariesbakterien
+--21.94|PIA Porcine Intestinale Adenomatose V
+--21.95|Schmerzbakterien
+--21.96|Tuberkulinum burnetti
+--21.97|Anaplasma phagocytophilum
+# Viren I
+22.00|Viren gesamt
+22.05|Viren I gesamt
+-22.10|Doppelstrang-DNA-Viren gesamt
+--22.11|Adenovirus
+--22.12|Cytomegalie-Virus (CMV)
+--22.13|Epstein-Barr-Virus (EBV)
+--22.14|Hepatitis B-Virus
+--22.15|Herpes simplex
+--22.16|Herpes simplex (feline) V
+--22.17|Herpes zoster
+--22.18|Humanes Papilloma Virus (HPV)
+--22.19|Papilloma Virus
+--22.20|Varizellen (Windpocken)
+--22.21|JC-Viren
+--22.22|Humanes Herpesvirus 8
+-22.40|Einzelstrang-DNA-Viren gesamt
+--22.41|Panleucopenie Virus V
+--22.42|Parvoviren (suis) V
+--22.43|Porcines Circovirus V
+-22.60|Einzelstrang-RNA-Viren, Positiv-Strang-RNA-Genom gesamt
+--22.61|AE-Virus V
+--22.62|BVD-Virus V
+--22.63|Caliciviren (feline) V
+--22.64|Chikungunya
+--22.65|Coronaviren (feline) V
+--22.66|Coronaviren (suis) V
+--22.67|Coxsackie-Virus B1
+--22.68|Coxsackie-Virus B4
+--22.69|EAV-Virus
+--22.70|Entenhepatitis-Virus V
+--22.71|Enteroviren
+--22.72|FHV-Viren (felines Herpes Virus) V
+--22.73|FSME
+--22.74|Hepatitis A-Virus
+--22.75|Hepatitis C-Virus
+--22.76|KSP-Virus V
+--22.77|MKS-Virus V
+--22.78|Noro-Virus
+--22.79|PRRS-Viren (suis) V
+--22.80|Rhino-Virus
+--22.81|SVD-Virus V
+--22.82|Tabakmosaikvirus
+--22.83|Teschen-Talfanvirus V
+--22.84|VES-Virus V
+--22.85|Hepatitis D-Virus V
+--22.86|Hepatitis E-Virus V
+--22.87|Dengue-Virus
+--22.88|Rubella (Röteln)
+--22.89|Coxackie-Virus A7
+--22.90|Zika-Viren
+--22.91|Humanes T-lymphotropes Virus 1
+--22.92|Humanes T-lymphotropes Virus 2
+# Viren II
+23.05|Viren II gesamt
+-23.10|Negativ-Strang-RNA-Genom, nicht segmentiert, gesamt
+--23.11|Borna-Virus
+--23.12|Equines Influenza-Virus V
+--23.13|Klassisches Geflügelpest-Virus V
+--23.14|Masern-Virus
+--23.15|Mumps-Virus
+--23.16|Parainfluenza-Virus
+--23.17|Porcine Influenza-Virus V
+--23.18|VSI-Virus (VSV)
+--23.19|HRSV
+-23.30|Negativ-Strang-RNA-Genom, segmentiert, gesamt
+--23.31|H1N1
+--23.32|H5N1
+--23.33|Influenza A und B Virus
+--23.34|A/H5N1
+-23.50|Doppelstrang-RNA-Viren gesamt
+--23.51|BTV-Viren V
+--23.52|FCoV-Viren V
+--23.53|FeLV-Viren V
+--23.54|FIV-Viren V
+--23.55|Retroviren
+--23.56|Rota-Viren
+--23.57|Rota-Viren (suis) V
+-23.70|Warzen gesamt
+--23.71|Alterswarzen
+--23.72|Dellwarzen
+--23.73|Feigwarzen
+--23.74|Flachwarzen
+--23.75|Fußsohlenwarzen
+--23.76|Juvenile Warzen
+--23.77|Pinselwarzen
+--23.78|Vulgäre Warzen
+--23.79|Warzen N.N.- Warzen rezidivierend
+-23.80|Weitere Viren gesamt
+--23.81|Viren N.N.
+# Parasiten I
+24.00|Parasiten gesamt
+24.05|Parasiten I gesamt
+-24.10|Hakenwürmer gesamt
+--24.11|Ancylostoma brasiliense
+--24.12|Ancylostoma caninum
+--24.13|Gyrodactylus
+-24.20|Spulwürmer / Fadenwürmer / Madenwürmer gesamt
+--24.21|Ascaris megalocephala
+--24.22|Dirofilaria immitis (Herzwurm)
+--24.23|Enterobius vermicularis
+--24.24|Haemonchus contortus
+--24.25|Loa loa
+--24.26|Macracanthorhynchus
+--24.27|Onchocerca volvulus (Tumor)
+--24.28|Oxyuren
+--24.29|Passalurus ambiguus (Kaninchenwurm)
+--24.30|Stephanurus dentalus
+--24.31|Strongyloides (filariform)
+--24.32|Trichinella spiralis (Muskel)
+--24.33|Trichuris sp.
+--24.34|Macracanthorhynchus hirudinaceus
+--24.35|Anisakis simplex
+--24.36|Dirofilaria repens
+--24.37|Microfilarien
+--24.38|Ascaris lumbricoides
+-24.40|Haarwürmer gesamt
+--24.41|Capillaria hepatica (Leber)
+-24.50|Saugwürmer / Egel gesamt
+--24.51|Clonorchis sinensis
+--24.52|Cryptocotyle lingua
+--24.53|Echinostoma revolutum
+--24.54|Eurytrema pancreaticum
+--24.55|Fasciola hepatica
+--24.56|Fasciolopsis buski
+--24.57|Fischoedrius elongatus
+--24.58|Gastrothylax elongatus
+--24.59|Hasstile sig. tricolor
+--24.60|Metagonimus Yokogawai
+--24.61|Paragonimus Westermani
+--24.62|Prosthogonimus macro.
+--24.63|Schistosoma haematobium
+--24.64|Schistosoma mansoni
+--24.65|Urocleidus
+-24.80|Bandwürmer gesamt
+--24.81|Echinococcus granulosus
+--24.82|Echinococcus multilocularis
+--24.83|Taenia pisiformis
+--24.84|Taenia saginata
+--24.85|Taenia solium
+--24.86|Moniezia expansa
+--24.87|Taenia serialis
+--24.88|Diphyllobothrium latum
+--24.89|Hymenolepis diminuta
+# Parasiten II
+25.05|Parasiten II gesamt
+-25.10|Protozoen / Einzeller gesamt
+--25.11|Balantidien
+--25.12|Balantidium coli
+--25.13|Besnoitia (Lunge)
+--25.14|Blepharisma
+--25.15|Chilomastix-Zysten (Ratte)
+--25.16|Chilomonas
+--25.17|Kokzidien (suis) V
+--25.18|Kokzidien (canis) V
+--25.19|Dientamoeba fragilis
+--25.20|Encephalitozoon cuniculi V
+--25.21|Endolimax nana
+--25.22|Endolimax tropica
+--25.23|Entamoeba coli trophozoi
+--25.24|Entamoeba gingivalis
+--25.25|Entamoeba histolytica tro.
+--25.26|Giardia lamblia (troph.)
+--25.27|Iodamoeba bütschlii
+--25.28|Iodamoeba bütschlii tropica
+--25.29|Leishmania brasiliensis
+--25.30|Leishmania donovani
+--25.31|Leishmania mexicana
+--25.32|Leishmania tropica
+--25.33|Leucocytozoon
+--25.34|Myxobolus cerebralis
+--25.35|Naegleria fowleri
+--25.36|Plasmodium cynomolgi
+--25.37|Plasmodium falciparum
+--25.38|Plasmodium vivax
+--25.39|Sarcocystis
+--25.40|Toxoplasma gondii
+--25.41|Trichomonas vaginalis
+--25.42|Trypanosoma brucei
+--25.43|Trypanosoma cruzi (Gehirn)
+--25.44|Trypanosoma equip.
+--25.45|Trypanosoma gambiense
+--25.46|Trypanosoma lewisi
+--25.47|Trypanosoma rhodesiens
+--25.48|Kokzidien (feline) V
+--25.49|Kokzidien (bovine) V
+--25.50|Kryptosporidien V
+--25.51|Isospora belli
+-25.60|Milben / Zecken / Läuse gesamt
+--25.61|Acarus siro (Mehlmilbe)
+--25.62|Dermatophagoides (Staubmilbe)
+--25.63|Demodex canis V
+--25.64|Demodex folliculorum (Haarbalgmilbe)
+--25.65|Neotrombicula autumnalis (Herbstgrasmilbe) V
+--25.66|Notoedres cati V
+--25.67|Ornithonyssus (Vogelmilbe)
+--25.68|Sarcoptes scabiei (Krätze)
+--25.69|Pediculidae
+--25.70|Pthirus pubis
+-25.80|Weitere Parasiten gesamt
+--25.81|Echinoporyphium recurvatum
+--25.82|Hypodereum conoideum
+--25.83|Stigeoclonium
+--25.84|Troglodytella abrasseri
+--25.85|Blutparasiten
+--25.86|Pneumocystis jiroveci (carinii)
+# Pilze I
+26.00|Pilze gesamt
+26.05|Pilze I gesamt
+-26.10|Schimmelpilze gesamt
+--26.11|Aspergillus fumigatus
+--26.12|Aspergillus niger
+--26.13|Aspergillus ochraceus
+--26.14|Cladosporium herbarum
+--26.15|Geotrichum candidum
+--26.16|Monilia albicans
+--26.17|Mucor mucedo
+--26.18|Mucor racemosus
+--26.19|Penicillium camemberti
+--26.20|Penicillium frequentans
+--26.21|Penicillium notatum
+--26.22|Penicillium roqueforti
+--26.23|Pullularia pullulans
+--26.24|Scopulariopsis brevicaulis
+--26.25|Torulopsis glabratis
+--26.26|Acremonium
+--26.27|Aspergillus versicolor
+--26.28|Aspergillus flavus
+--26.29|Aureobasidium pullulans
+--26.30|Curvularia
+--26.31|Eurotium
+--26.32|Fusarium oxysporum
+--26.33|Paecilomyces variotii
+--26.34|Scopulariopsis
+--26.35|Stemphylium
+--26.36|Penicillium chrysogenum
+--26.37|Rhizopus
+--26.38|Stachybotrys
+-26.40|Schimmelpilzgifte gesamt
+--26.41|Aflatoxin
+--26.42|Griseo fulvinum
+--26.43|Helminthosporium dermatoideum (Cytochalasin B)
+--26.44|Sterigmatocystin
+--26.45|Zearalenon
+--26.46|Trichothecene
+# Pilze II
+27.05|Pilze II gesamt
+-27.10|Hefepilze gesamt
+--27.11|Candida albicans
+--27.12|Candida crusei
+--27.13|Candida dattila
+--27.14|Candida famata
+--27.15|Candida glabrata
+--27.16|Candida guilliermondii
+--27.17|Candida kefyr
+--27.18|Candida lusitaniae
+--27.19|Candida parapsilosis
+--27.20|Candida stellatoidea
+--27.21|Candida tropicalis
+--27.22|Candida viswanthii
+--27.23|Cryptococcus neoformans
+--27.24|Malasezien V
+--27.25|Malassezia furfur
+--27.26|Rhodotorula rubra
+--27.27|Saccaromyces cerevisiae
+--27.28|Sporothrix schenkii
+--27.29|Torulopsis glabrata
+--27.30|Trichosporon capitatum
+--27.31|Trichosporon cutaneum
+-27.40|Schwärzepilz gesamt
+--27.41|Chaetomium
+--27.42|Dematiaceae
+--27.43|Phoma
+--27.44|Ulocladium
+--27.45|Alternaria
+-27.50|Fadenpilze / Dermatophyten, dimorphe Pilze gesamt
+--27.51|Coccidioides immitis V
+--27.52|Microsporum canis
+--27.53|Microsporum gypseum
+--27.54|Trichophyton cutaneum
+--27.55|Trichophyton mentagro
+--27.56|Trichophyton rubrum
+--27.57|Trichophyton terrestre
+--27.58|Trichophyton verrucosum (Trichophytie)
+--27.59|Zymonema farciminosus
+--27.60|Histoplasma
+-27.70|Schleimpilze gesamt
+--27.71|Arcyria
+--27.72|Lycogala
+--27.73|Stemonitis
+-27.80|Schlauchpilze gesamt
+--27.81|Claviceps purpurae (Secale cornutum)
+--27.82|Claviceps purpurae (Ergot)
+--27.83|Botrytis
+--27.84|Neurospora
+--27.85|Trichoderma
+-27.90|Weitere Pilze gesamt
+--27.91|Tryptophanum
+--27.92|Wallemia
+# Bachblüten
+81.00|Bachblüten gesamt
+-81.01|Agrimony
+-81.02|Aspen
+-81.03|Beech
+-81.04|Centaury
+-81.05|Cerato
+-81.06|Cherry Plum
+-81.07|Chestnut Bud
+-81.08|Chicory
+-81.09|Clematis
+-81.10|Crab Apple
+-81.11|Elm
+-81.12|Gentian
+-81.13|Gorse
+-81.14|Heather
+-81.15|Holly
+-81.16|Honeysuckle
+-81.17|Hornbeam
+-81.18|Impatiens
+-81.19|Larch
+-81.20|Mimulus
+-81.21|Mustard
+-81.22|Oak
+-81.23|Olive
+-81.24|Pine
+-81.25|Red Chestnut
+-81.26|Rock Rose
+-81.27|Rock Water
+-81.28|Scleranthus
+-81.29|Star of Bethlehem
+-81.30|Sweet Chestnut
+-81.31|Vervain
+-81.32|Vine
+-81.33|Walnut
+-81.34|Water Violet
+-81.35|White Chestnut
+-81.36|Wild Oat
+-81.37|Wild Rose
+-81.38|Willow
+# Schüssler-Salze
+82.00|Schüssler-Salze gesamt
+-82.01|Calcium fluoratum
+-82.02|Calcium phosphoricum
+-82.03|Ferrum phosphoricum
+-82.04|Kalium chloratum
+-82.05|Kalium phosphoricum
+-82.06|Kalium sulfuricum
+-82.07|Magnesium phosphoricum
+-82.08|Natrium chloratum
+-82.09|Natrium phosphoricum
+-82.10|Natrium sulfuricum
+-82.11|Silicea
+-82.12|Calcium sulfuricum
+-82.13|Kalium arsenicosum
+-82.14|Kalium bromatum
+-82.15|Kalium jodatum
+-82.16|Lithium chloratum
+-82.17|Manganum sulfuricum
+-82.18|Calcium sulfuratum
+-82.19|Cuprum arsenicosum
+-82.20|Kalium Aluminium sulfuricum
+-82.21|Zinkum chloratum
+-82.22|Calcium carbonicum
+-82.23|Natrium bicarbonicum
+-82.24|Arsenicum jodatum
+-82.25|Aurum chloratum natronatum
+-82.26|Selenium
+-82.27|Kalium bichromicum
+# Systemprogramme
+87.01|Systemprogramm Herz
+87.02|Systemprogramm Lunge
+87.03|Systemprogramm Atemwege
+87.04|Systemprogramm Hals
+87.05|Systemprogramm Nebenhöhlen
+87.06|Systemprogramm Nieren
+87.07|Systemprogramm Blase
+87.08|Systemprogramm Leber
+87.09|Systemprogramm Galle
+87.10|Systemprogramm Bauchspeicheldrüse
+87.11|Systemprogramm Milz
+87.12|Systemprogramm Magen
+87.13|Systemprogramm Dünndarm
+87.14|Systemprogramm Dickdarm
+87.15|Systemprogramm Adern, Venen
+87.16|Systemprogramm Prostata
+87.17|Systemprogramm Hoden
+87.18|Systemprogramm Penis
+87.19|Systemprogramm Ovarien
+87.20|Systemprogramm Weibliche Brust
+87.21|Systemprogramm Weibliche Brust-Entzündung
+87.22|Systemprogramm Auge
+87.23|Systemprogramm Ohr
+87.24|Systemprogramm Haut
+87.25|Systemprogramm Haare
+87.26|Systemprogramm Zähne
+87.27|Systemprogramm Hypothalamus
+87.28|Systemprogramm Hormone
+87.29|Systemprogramm Kreislauf
+87.30|Systemprogramm Nerven
+87.31|Systemprogramm Rücken
+87.32|Systemprogramm Knochen
+87.33|Systemprogramm Gelenke
+87.34|Systemprogramm Knie
+87.35|Systemprogramm Hüfte
+87.36|Systemprogramm Sehnen, Muskeln, Bänder
+87.37|Systemprogramm Rheuma
+87.38|Systemprogramm Pestizide
+87.39|Systemprogramm E. Stoffe
+87.40|Systemprogramm Radon, Radioaktivität
+87.41|Systemprogramm E.Wellen/Harp
+87.42|Systemprogramm Amalgam
+87.43|Systemprogramm Formaldehyd
+87.44|Systemprogramm Grippe
+87.45|Systemprogramm Schnupfen
+87.46|Systemprogramm Husten
+87.47|Systemprogramm Hals
+87.48|Systemprogramm Stirnhöhle
+87.49|Systemprogramm Augen
+87.50|Systemprogramm Haut
+87.51|Systemprogramm Zecken
+87.52|Systemprogramm Gelenksbakterien
+87.53|Systemprogramm Nerven-Muskeln-Bakterien
+87.54|Systemprogramm Trichomonaden
+87.55|Systemprogramm Haut-Herpes
+87.56|Systemprogramm Haustier-Bakterien
+87.57|Systemprogramm Vogelgrippe
+87.58|Systemprogramm Darm-Bakterien
+87.59|Systemprogramm Leberviren
+87.60|Systemprogramm Retroviren
+87.61|Systemprogramm Genital-Bakterien/Viren
+87.62|Systemprogramm Blasen-Bakterien
+87.63|Systemprogramm Adeno-Viren
+87.64|Systemprogramm Warzen
+87.65|Systemprogramm Toxoplasmose
+87.66|Systemprogramm Leberegel
+87.67|Systemprogramm Müdigkeit-Stress
+87.68|Systemprogramm Leishmania
+87.69|Systemprogramm Herz-Lungen-Entzündung
+87.70|Systemprogramm Hunde-Katzenwurm
+87.71|Systemprogramm Tierwurm
+87.72|Systemprogramm Hakenwurm
+87.73|Systemprogramm Bandwurm
+87.74|Systemprogramm Fadenwurm
+87.75|Systemprogramm Fischegel
+87.76|Systemprogramm Candida-Pilzerkrankung
+87.77|Systemprogramm Aspergillus-Pilzerkrankung
+87.78|Systemprogramm Hefepilz-Erkrankung
+87.79|Systemprogramm Trichosporen
+87.80|Systemprogramm Antibiotika
+`,dphys:`
+# Zelle und Gewebe
+90.00|Zelle und Gewebe, gesamt
+90.01|Zellkern
+90.02|Zellmembran
+90.03|Zytoplasma
+90.04|Organellen, gesamt
+# Blut
+90.05|Blut, gesamt
+90.06|Erythrozyten
+90.07|Leukozyten
+90.08|Thrombozyten
+90.09|Blutgerinnungsfaktoren
+# Immunsystem
+90.10|Immunsystem, gesamt
+# Lymphsystem
+90.15|Lymphsystem, gesamt
+90.16|Lymphbahnen
+90.17|Lymphknoten
+90.18|Tonsillen
+90.19|Peyersche Plaques
+# Kreislaufsystem
+90.20|Kreislaufsystem, gesamt
+90.21|Arterien
+90.22|Venen
+# Herz
+90.25|Herz, gesamt
+90.26|Herzschichten, gesamt
+90.27|Herzinnenräume, gesamt
+90.28|Herzklappen, gesamt
+90.29|Tricusspidalisklappe
+90.30|Pulmonalklappe
+90.31|Mitralklappe
+90.32|Aortenklappe
+90.33|Reizleitungssystem, gesamt
+# Atemwege
+90.35|Atemwege, gesamt
+90.36|Nasennebenhöhle, gesamt
+90.37|Kehlkopf, gesamt
+90.38|Bronchien, gesamt
+90.39|Lunge
+# Niere / Harnorgane
+90.40|Niere / Harnorgane, gesamt
+90.41|Niere, gesamt
+90.42|Harnorgane, gesamt
+90.43|Harnblase
+90.44|Schließmuskel
+# Verdauungssystem
+90.45|Verdauungssystem, gesamt
+90.46|Magen
+90.47|Dünndarm, gesamt
+90.48|Dickdarm
+90.49|After/ Analdrüse
+# Leber / Galle / Bauchspeicheldrüse
+90.50|Leber / Galle / Bauchspeicheldrüse, gesamt
+90.51|Leber, gesamt
+90.52|Galle gesamt (nicht bei Pferd)
+90.53|Bauchspeicheldrüse gesamt
+# Stoffwechsel
+90.55|Stoffwechsel, gesamt
+90.56|Eiweißstoffwechsel
+90.57|Kohlenhydratstoffwechsel
+90.58|Fettstoffwechsel
+# Bewegungsapparat
+90.60|Bewegungsapparat, gesamt
+90.61|Skelett, gesamt
+90.62|Muskulatur gesamt
+90.63|Wirbelsäule gesamt
+90.64|Bandscheiben, gesamt
+# Nervensystem
+90.65|Nervensystem, gesamt
+90.66|Zentralnervensystem, gesamt
+90.67|Peripheres Nervensystem, gesamt
+# Sehorgan
+90.70|Sehorgan, gesamt
+90.71|Tränendrüse, Tränenröhrchen gesamt
+90.72|Häute, gesamt
+90.73|Linse, Pupille, Glaskörper gesamt
+90.74|Sehnerven, gesamt
+# Hörorgan / Gleichgewichtsorgan
+90.75|Hörorgan / Gleichgewichtsorgan, gesamt
+90.76|Äußeres Ohr, gesamt
+90.77|Mittelohr, gesamt
+90.78|Innenohr, gesamt
+# Haut / Fell
+90.80|Haut / Fell, gesamt
+90.81|Haut gesamt
+90.82|Hautdrüsen, gesamt
+90.83|Fell
+90.84|Hufe / Krallen
+# Hormonsystem
+90.85|Hormonsystem, gesamt
+90.86|Hypothalamus
+90.87|Hypophyse
+90.88|Schilddrüse
+90.89|Nebenschilddrüse
+90.90|Thymus
+90.91|Nebennierenmark
+90.92|Nebennierenrinde
+90.93|Eierstöcke
+90.94|Hoden
+# Weibliche Geschlechtsorgane
+90.95|Weibliche Geschlechtsorgane, gesamt
+# Männliche Geschlechtsorgane
+90.96|Männliche Geschlechtsorgane, gesamt
+# Psyche
+90.97|Psyche, gesamt
+# Stress
+90.98|Stress, gesamt
+# Zähne
+90.99|Zähne, gesamt
+`,dpath:`
+# Zelle und Gewebe
+98.00|Narbenentstörung
+98.01|Wundheilung
+98.02|Entgiftung Grundprogramm
+98.03|Entgiftung Impfschäden
+98.04|Entgiftung Metalle gesamt
+# Blut
+98.10|Blutungsanämie
+98.11|Anämie durch gestörte Erythrozytenbildung
+98.12|Renale Anämie
+98.13|Entartung Knochenmark
+98.14|Anämie Eisenmangel
+98.15|Anämie Proteinmangel
+98.16|Arterielle Sauerstoffsättigung
+# Immunsystem
+98.20|Allergie gesamt
+98.21|Floh-Speichel Allergie
+98.22|Insektenstich
+98.23|Steigerung der Abwehrleistung
+98.24|Unspezifische Immunabwehr
+98.25|Spezifische Immunabwehr
+98.26|Kontaktallergie
+# Lymphsystem
+98.30|Lymphgefäßentzündung
+98.31|Lymphknotenentzündung–Schwellung
+98.32|Lymphabflussstörung
+98.33|Lymphödem
+98.34|Milz-Organfunktionsstörung
+98.35|Thymus-Organfunktionsstörung
+98.36|Tonsillitis, akut
+# Kreislaufsystem
+98.40|Durchblutungsstörungen arteriell
+98.41|Durchblutungsstörungen venös
+98.42|Blutdruckregulationsstörungen
+98.43|Renale Hypertonie
+98.44|Arteriosklerose / Selenmangel
+98.45|Blutgefäßentzündung
+98.46|Blutgefäßdegeneration
+# Herz
+98.50|Myocardfibrose
+98.51|Linksherzinsuffizienz
+98.52|Rechtsherzinsuffizienz
+98.53|Herzfunktionsstörungen / psychogen
+98.54|Herzleistungsstärkung
+98.55|Psychosomatische Herzerkrankung
+# Atemwege
+98.60|Husten akut
+98.61|Husten allergisch
+98.62|Bronchitis akut
+98.63|Asthma bronchiale, allergisch
+98.64|Verschleimung
+98.65|Pleuritis sicca / exsudativa
+98.66|Pneumonie, bakteriell
+98.67|Pharyngitis
+98.68|Laryngitis
+# Niere
+98.70|Niereninsuffizienz
+98.71|Nephrolithiasis (Nierensteine)
+98.72|Diabetes insipidus renalis
+98.73|Diabetes insipidus centralis
+98.74|Zystitis
+98.75|Harnsteine / Harngrießbindung
+98.76|Harnverhalten
+98.77|Hormonelle Inkontinenz
+98.78|Harnabsatzprobleme durch Lähmung von Musk. und Nerv.
+98.79|Harnabsatzstörungen nach Traumatisierung
+98.80|Protestpinkeln
+# Verdauungssystem
+98.81|Stomatitis
+98.82|Gastritis akut
+98.83|Aufgasungen / Blähungen
+98.84|Brechdurchfall
+98.85|Diarrhö
+98.86|Kot-Inkontinenz
+98.87|Analdrüsenverstopfungen- abszesse
+98.88|Ulcus ventriculi
+98.89|Ulcus duodeni
+98.90|Colon irritabile
+# Leber-Galle-Bauchspeicheldrüsen
+98.91|Leberentzündung
+98.92|Leberdegeneration
+98.93|Bauchspeicheldrüse, exokrine Funktionsstörung
+98.94|Bauchspeicheldrüsenentzündung
+# Stoffwechsel
+98.99|Eiweißstoffwechselstörung
+99.00|Kohlenhydratstoffwechselstörung
+99.01|Fettstoffwechselstörung
+99.02|Diabetes mellitus
+99.03|Gicht
+# Bewegungsapparat
+99.06|Knochenverletzung/- Bruch
+99.07|Knochenentzündung
+99.08|Verstauchung (Distorsion)
+99.09|Prellung / Bluterguss
+99.10|Muskelverspannung
+99.11|Muskelverletzung / Faserriss
+99.12|Muskelentzündung
+99.13|Bandverletzung
+99.14|Bänderdehnung
+99.15|Bandentzündung / Sehnenscheidenentzündung
+99.16|Wirbelsäule Schmerzen / Verspannung
+99.17|Gelenkentzündung (Arthritis)
+99.18|Gelenkdegeneration (Arthrose)
+99.19|Spondylose
+99.20|Patella Luxation
+99.21|Hüftgelenksdysplasie
+99.22|Bandscheibendegeneration / Teckellähme
+# Nervensystem
+99.25|Ataxie / Bewegungskoordinationsstörungen
+99.26|Lähmungen, spastisch
+99.27|Lähmungen, schlaff
+99.28|Epileptiforme Anfälle
+99.29|Neuritis
+99.30|Neuralgien
+# Sehorgan
+99.35|Augenbindehautentzündung / Konjunktivitis
+99.36|Konjunktivitis follicularis
+99.37|Katarakt
+99.38|Glaukom
+# Hörorgan
+99.40|Otitis media / Mittelohrentzündung
+99.41|Ohrspeicheldrüsenentzündung
+99.42|Othämatom
+# Haut / Fell
+99.45|Räude
+99.46|Hot Spot
+99.47|Haarwechselstörungen allgemein
+99.48|Haarausfall allergisch
+99.49|Hautmykosen
+99.50|Urtikaria
+99.51|Kontaktekzem (allergisch)
+# Hormonsystem
+99.55|Schilddrüsenüberfunktion
+99.56|Schilddrüsenunterfunktion
+99.57|Sexualzyklus, Regulationsstörungen
+99.58|Scheinträchtigkeit
+99.59|Cushing-Syndrom
+99.60|Hormonhaushalt Grundregulation Hündin
+99.61|Hormonhaushalt Grundregulation Rüde
+# Weibliche Geschlechtsorgane
+99.66|Mastitis
+99.67|Pyometra
+99.68|Eileiterentzündung
+99.69|Eierstockentzündung
+# Männliche Geschlechtsorgane
+99.71|Hodenabstiegsstörungen
+99.72|Hodenentzündung
+99.73|Prostata, Funktionsstörungen
+99.74|Prostatits
+99.75|Hypersexualität
+99.76|Präputialkatarrh
+# Psyche
+99.80|Depressionen
+99.81|Psyche, Stärkung
+99.82|Anpassungsstörungen
+99.83|Panik-Attacke
+# Stress
+99.85|Stressreduktion
+99.86|Wetterfühligkeit / Sferics
+99.87|Seelischer Stress
+# Futtermittelverunreinigungen
+99.90|Futtermittelverunreinigung gesamt
+99.91|Pathogene Hefen
+99.92|Schimmelpilze
+99.93|Mycotoxine
+99.94|Clostridien
+# Trinkwasserverunreinigungen
+99.95|Trinkwasserverunreinigung gesamt
+99.96|Schimmelpilze
+99.97|Algen
+99.98|Clostridien
+99.99|Klebsiellen
+`,kphys:`
+# Zelle und Gewebe
+92.00|Zelle und Gewebe, gesamt
+92.01|Zellkern
+92.02|Zellmembran
+92.03|Zytoplasma
+92.04|Organellen, gesamt
+# Blut
+92.05|Blut, gesamt
+92.06|Erythrozyten
+92.07|Leukozyten
+92.08|Thrombozyten
+92.09|Blutgerinnungsfaktoren
+# Immunsystem
+92.10|Immunsystem, gesamt
+# Lymphsystem
+92.15|Lymphsystem, gesamt
+92.16|Lymphbahnen
+92.17|Lymphknoten
+92.18|Tonsillen
+92.19|Peyersche Plaques
+# Kreislaufsystem
+92.20|Kreislaufsystem, gesamt
+92.21|Arterien
+92.22|Venen
+# Herz
+92.25|Herz, gesamt
+92.26|Herzschichten, gesamt
+92.27|Herzinnenräume, gesamt
+92.28|Herzklappen, gesamt
+92.29|Tricusspidalisklappe
+92.30|Pulmonalklappe
+92.31|Mitralklappe
+92.32|Aortenklappe
+92.33|Reizleitungssystem, gesamt
+# Atemwege
+92.35|Atemwege, gesamt
+92.36|Nasennebenhöhle, gesamt
+92.37|Kehlkopf, gesamt
+92.38|Bronchien, gesamt
+92.39|Lunge
+# Niere / Harnorgane
+92.40|Niere / Harnorgane, gesamt
+92.41|Niere, gesamt
+92.42|Harnorgane, gesamt
+92.43|Harnblase
+92.44|Schließmuskel
+# Verdauungssystem
+92.45|Verdauungssystem, gesamt
+92.46|Magen
+92.47|Dünndarm, gesamt
+92.48|Dickdarm
+92.49|After / Analdrüse
+# Leber / Galle / Bauchspeicheldrüse
+92.50|Leber / Galle / Bauchspeicheldrüse, gesamt
+92.51|Leber, gesamt
+92.52|Galle gesamt (nicht bei Pferd)
+92.53|Bauchspeicheldrüse gesamt
+# Stoffwechsel
+92.55|Stoffwechsel, gesamt
+92.56|Eiweißstoffwechsel
+92.57|Kohlenhydratstoffwechsel
+92.58|Fettstoffwechsel
+# Bewegungsapparat
+92.60|Bewegungsapparat, gesamt
+92.61|Skelett, gesamt
+92.62|Muskulatur gesamt
+92.63|Wirbelsäule gesamt
+92.64|Bandscheiben, gesamt
+# Nervensystem
+92.65|Nervensystem, gesamt
+92.66|Zentralnervensystem, gesamt
+92.67|Peripheres Nervensystem, gesamt
+# Sehorgan
+92.70|Sehorgan, gesamt
+92.71|Tränendrüse, Tränenröhrchen gesamt
+92.72|Häute, gesamt
+92.73|Linse, Pupille, Glaskörper gesamt
+92.74|Sehnerven, gesamt
+# Hörorgan / Gleichgewichtsorgan
+92.75|Hörorgan / Gleichgewichtsorgan, gesamt
+92.76|Äußeres Ohr, gesamt
+92.77|Mittelohr, gesamt
+92.78|Innenohr, gesamt
+# Haut / Fell
+92.80|Haut / Fell, gesamt
+92.81|Haut gesamt
+92.82|Hautdrüsen, gesamt
+92.83|Fell
+92.84|Hufe / Krallen
+# Hormonsystem
+92.85|Hormonsystem, gesamt
+92.86|Hypothalamus
+92.87|Hypophyse
+92.88|Schilddrüse
+92.89|Nebenschilddrüse
+92.90|Thymus
+92.91|Nebennierenmark
+92.92|Nebennierenrinde
+92.93|Eierstöcke
+92.94|Hoden
+# Weibliche Geschlechtsorgane
+92.95|Weibliche Geschlechtsorgane, gesamt
+# Männliche Geschlechtsorgane
+92.96|Männliche Geschlechtsorgane, gesamt
+# Psyche
+92.97|Psyche, gesamt
+# Stress
+92.98|Stress, gesamt
+# Zähne
+92.99|Zähne, gesamt
+`,kpath:`
+# Zelle und Gewebe
+93.00|Narbenentstörung
+93.01|Wundheilung
+93.02|Entgiftung Grundprogramm
+93.03|Entgiftung Impfschäden
+93.04|Entgiftung Metalle gesamt
+# Blut
+93.10|Blutungsanämie
+93.11|Anämie durch gestörte Erythrozytenbildung
+93.12|FeLV
+93.13|Renale Anämie
+93.14|Entartung Knochenmark
+93.15|Anämie Eisenmangel
+93.16|Anämie Proteinmangel
+93.17|Arterielle Sauerstoffsättigung
+# Immunsystem
+93.20|Allergie gesamt
+93.21|FiV
+93.22|Floh-Speichel-Allergie
+93.23|Insektenstich
+93.24|Steigerung der Abwehrleistung
+93.25|Unspezifische Immunabwehr
+93.26|Spezifische Immunabwehr
+93.27|Kontaktallergie
+# Lymphsystem
+93.30|Lymphgefäßentzündung
+93.31|Lymphknotenentzündung-Schwellung
+93.32|Lymphabflussstörung
+93.33|Lymphödem
+93.34|Milz-Organfunktionsstörung
+93.35|Thymus-Organfunktionsstörung
+93.36|Tonsillitis akut
+# Kreislaufsystem
+93.40|Durchblutungsstörungen arteriell
+93.41|Durchblutungsstörungen venös
+93.42|Blutdruckregulationsstörungen
+93.43|Renale Hypertonie
+93.44|Arteriosklerose
+93.45|Blutgefäßentzündung
+93.46|Blutgefäßdegeneration
+# Herz
+93.50|Myocardfibrose
+93.51|Linksherzinsuffizienz
+93.52|Rechtsherzinsuffizienz
+93.53|Herzleistungsstärkung
+93.54|Psychosomatische Herzerkrankung
+# Atemwege
+93.60|Husten akut
+93.61|Husten allergisch
+93.62|Bronchitis akut
+93.63|Asthma bronchiale, allergisch
+93.64|Verschleimung
+93.65|Pleuritis sicca / exsudativa
+93.66|Pneumonie, bakteriell
+93.67|Katzenschnupfen
+# Niere
+93.71|Niereninsuffizienz
+93.72|Nephrolithiasis (Nierensteine)
+93.73|Diabetes insipidus renalis
+93.74|Diabetes insipidus centralis
+93.75|Zystitis
+93.76|Harnsteine / Harngrießbindung
+93.77|Harnverhalten
+93.78|Hormonelle Inkontinenz
+93.79|Harnabsatzprobleme durch Lähmung von Muskul. und Nerv.
+93.80|Lähmungen des Blasenschließmuskels
+93.81|Harnabsatzstörungen nach Traumatisierung
+93.82|Protestpinkeln
+93.83|Förderung der Diurese
+# Verdauungssystem
+93.85|Stomatitis
+93.86|FiP
+93.87|Gastritis akut
+93.88|Aufgasungen / Blähungen
+93.89|Brechdurchfall
+93.90|Diarrhö
+93.91|Kot- Inkontinenz
+93.92|Analdrüsenverstopfungen- abszesse
+93.93|Ulcus ventriculi
+93.94|Ulcus duodeni
+93.95|Colon irritabile
+# Leber-Galle-Bauchspeicheldrüsen
+93.96|Leberentzündung
+93.97|Leberdegeneration
+93.98|Bauchspeicheldrüse, exokrine Funktionsstörung
+93.99|Bauchspeicheldrüsenentzündung
+94.00|Gallenblasen-/ Gallengangsentzündung
+94.01|Gallensaftabflussstörung
+# Stoffwechsel
+94.05|Eiweißstoffwechselstörung
+94.06|Kohlenhydratstoffwechselstörung
+94.07|Fettstoffwechselstörung
+94.08|Diabetes mellitus
+94.09|Gicht
+# Bewegungsapparat
+94.11|Knochenverletzung/- Bruch
+94.12|Knochenentzündung
+94.13|Verstauchung (Distorsion)
+94.14|Prellung / Bluterguss
+94.15|Muskelverspannung
+94.16|Muskelverletzung / Faserriss
+94.17|Muskelentzündung
+94.18|Bandverletzung
+94.19|Bänderdehnung
+94.20|Bandentzündung / Sehnenscheidenentzündung
+94.21|Wirbelsäule Schmerzen / Verspannung
+94.22|Gelenkentzündung (Arthritis)
+94.23|Gelenkdegeneration (Arthrose)
+94.24|Spondylose
+# Nervensystem
+94.30|Ataxie / Bewegungskoordinationsstörungen
+94.31|Lähmungen, spastisch
+94.32|Lähmungen, schlaff
+94.33|Epileptiforme Anfälle
+94.34|Neuritis
+94.35|Neuralgien
+# Sehorgan
+94.37|Augenbindehautentzündung / Konjunktivitis
+94.38|Konjunktivitis follicularis
+94.39|Katarakt
+94.40|Glaukom
+# Hörorgan
+94.42|Otitis media / Mittelohrentzündung
+94.43|Ohrspeicheldrüsenentzündung
+94.44|Othämatom
+# Haut / Fell
+94.47|Räude
+94.48|Hot Spot
+94.49|Haarwechselstörungen allgemein
+94.50|Haarwechselstörung hormonell
+94.51|Mykosen
+# Hormonsystem
+94.52|Schilddrüsenüberfunktion
+94.53|Schilddrüsenunterfunktion
+94.54|Sexualzyklus, Regulationsstörungen
+94.55|Scheinträchtigkeit
+94.56|Cushing Syndrom
+94.57|Hormonhaushalt Grundregulation Katze
+94.58|Hormonhaushalt Grundregulation Kater
+# Weibliche Geschlechtsorgane
+94.62|Mastitis
+94.63|Pyometra
+94.64|Eileiterentzündung
+94.65|Eierstockentzündung
+# Männliche Geschlechtsorgane
+94.67|Hodenabstiegsstörungen
+94.68|Hodenentzündung
+94.69|Prostatitis
+# Psyche
+94.71|Depressionen
+94.72|Psyche, Stärkung
+94.73|Anpassungsstörungen
+94.74|Panik-Attacke
+# Stress
+94.76|Stressreduktion
+94.77|Wetterfühligkeit / Sferics
+94.78|Seelischer Stress
+# Futtermittelverunreinigungen
+94.81|Futtermittelverunreinigung gesamt
+94.82|Pathogene Hefen
+94.83|Schimmelpilze
+94.84|Mycotoxine
+94.85|Clostridien
+# Trinkwasserverunreinigungen
+94.86|Trinkwasserverunreinigung gesamt
+94.87|Schimmelpilze
+94.88|Algen
+94.89|Clostridien
+94.90|Klebsiellen
+`};
+
+/* ---------- Hilfen ---------- */
+var $=function(s,r){return (r||document).querySelector(s)};
+var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+var esc=function(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
+var LBL={'N':'normal','+':'positiv','-':'negativ'};
+var SYM={'N':'N','+':'+','-':'−'};
+var SYSNAME={phys:'Physiologie Pferd',path:'Pathologie Pferd',std:'Standard',dphys:'Physiologie Hund',dpath:'Pathologie Hund',kphys:'Physiologie Katze',kpath:'Pathologie Katze'};
+function cmpCode(a,b){var x=a.code.split('.'),y=b.code.split('.');for(var i=0;i<Math.max(x.length,y.length);i++){var m=parseInt(x[i],10),n=parseInt(y[i],10);if(isNaN(m)||isNaN(n)){var c=String(x[i]||'').localeCompare(String(y[i]||''));if(c) return c}else if(m!==n) return m-n}return 0}
+function flaggedList(s){return itemsOf(s).filter(function(i){return classify(s.results[i.code])}).sort(cmpCode)}
+var LS={
+  get:function(k){try{return localStorage.getItem(k)}catch(e){return null}},
+  set:function(k,v){try{localStorage.setItem(k,v);return true}catch(e){return false}}
+};
+function pad(n){return String(n).padStart(2,'0')}
+function today(){var d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
+function fmtDate(d){var p=String(d||'').split('-');return p.length===3?p[2]+'.'+p[1]+'.'+p[0]:''}
+function uid(){return 't'+Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+function isObj(o){return o&&typeof o==='object'&&!Array.isArray(o)}
+
+function parse(sys,raw){
+  var groups=[],g=null;
+  raw.trim().split('\n').forEach(function(line){
+    line=line.trim(); if(!line) return;
+    if(line.charAt(0)==='#'){
+      g={key:sys+groups.length,sys:sys,name:line.slice(1).trim(),items:[]};
+      groups.push(g);
+    }else{
+      var lvl=0;while(line.charAt(lvl)==='-') lvl++;
+      line=line.slice(lvl);
+      var i=line.indexOf('|');
+      g.items.push({code:line.slice(0,i),name:line.slice(i+1),sys:sys,gkey:g.key,gname:g.name,lvl:lvl,head:false});
+    }
+  });
+  groups.forEach(function(gr){
+    gr.items.forEach(function(it,ix){var nx=gr.items[ix+1];it.head=!!(nx&&nx.lvl>it.lvl)});
+  });
+  return groups;
+}
+var GROUPS={phys:parse('phys',RAW.phys),path:parse('path',RAW.path),std:parse('std',RAW.std),dphys:parse('dphys',RAW.dphys),dpath:parse('dpath',RAW.dpath),kphys:parse('kphys',RAW.kphys),kpath:parse('kpath',RAW.kpath)};
+function flat(gs){return gs.reduce(function(a,g){return a.concat(g.items)},[])}
+var SYSITEMS={phys:flat(GROUPS.phys),path:flat(GROUPS.path),std:flat(GROUPS.std),dphys:flat(GROUPS.dphys),dpath:flat(GROUPS.dpath),kphys:flat(GROUPS.kphys),kpath:flat(GROUPS.kpath)};
+var ALL=SYSITEMS.phys.concat(SYSITEMS.path,SYSITEMS.std,SYSITEMS.dphys,SYSITEMS.dpath,SYSITEMS.kphys,SYSITEMS.kpath);
+function normSp(x){return x==='hund'||x==='katze'?x:'pferd'}
+function spOf(s){return normSp(s&&s.species)}
+var SPN={pferd:'Pferd',hund:'Hund',katze:'Katze'},SPPFX={pferd:'',hund:'d',katze:'k'};
+function spName(s){return SPN[spOf(s)]}
+function sysKey(view,s){s=s||cur();return (view==='phys'||view==='path')?SPPFX[spOf(s)]+view:view}
+function itemsOf(s){return SYSITEMS.std.concat(SYSITEMS[sysKey('phys',s)],SYSITEMS[sysKey('path',s)])}
+var GBY={};
+GROUPS.phys.concat(GROUPS.path,GROUPS.std,GROUPS.dphys,GROUPS.dpath,GROUPS.kphys,GROUPS.kpath).forEach(function(g){GBY[g.key]=g});
+
+function hasF(v,x){return !!v&&v.indexOf(x)>-1}
+function classify(v){var p=hasF(v,'+'),m=hasF(v,'-');return p&&m?'b':p?'p':m?'m':''}
+function rowState(v){var c=classify(v);return c==='b'?'b':c==='p'?'+':c==='m'?'-':(v?'N':'')}
+function toggleFlag(v,x){
+  var on={'N':hasF(v,'N'),'+':hasF(v,'+'),'-':hasF(v,'-')};
+  on[x]=!on[x];
+  return (on['N']?'N':'')+(on['+']?'+':'')+(on['-']?'-':'');
+}
+function stats(s,items){
+  var n=0,pos=0,neg=0,bip=0,done=0;
+  (items||itemsOf(s)).forEach(function(it){
+    var v=s.results[it.code]; if(!v) return;
+    done++; if(hasF(v,'N')) n++;
+    var c=classify(v); if(c==='p') pos++; else if(c==='m') neg++; else if(c==='b') bip++;
+  });
+  return {n:n,pos:pos,neg:neg,bip:bip,done:done};
+}
+
+/* ---------- Zustand ---------- */
+var st={sessions:{},cur:null,view:'sess',q:'',filter:'all',open:{},conf:null,newId:null,editing:null,storage:'pending',save:'idle',dl:null};
+var dirty=new Set(),timers={},writing={};
+var store={ready:false,save:null,remove:null};
+var firstSync=true;
+
+function newSession(horse,species){
+  var s={id:uid(),horse:horse||'',species:normSp(species),date:today(),results:{},note:'',updated:0,persisted:false,touchedAt:0};
+  st.sessions[s.id]=s;return s;
+}
+function cur(){return st.sessions[st.cur]}
+function isPristine(c){return c&&!c.persisted&&!c.horse&&!c.note&&!Object.keys(c.results).length}
+function dropPristine(){var c=cur(); if(isPristine(c)) delete st.sessions[c.id]}
+function savedList(){
+  return Object.keys(st.sessions).map(function(k){return st.sessions[k]})
+    .filter(function(s){return s.persisted})
+    .sort(function(a,b){return (b.updated||0)-(a.updated||0)});
+}
+
+/* ---------- Speichern ---------- */
+function payload(s){
+  var r={};Object.keys(s.results).forEach(function(c){r[c.replace('.','_')]=s.results[c]});
+  return {horse:s.horse,species:spOf(s),date:s.date,results:r,note:s.note,updated:s.updated};
+}
+function fromDoc(id,d){
+  var r={};
+  if(isObj(d.results)) Object.keys(d.results).forEach(function(k){
+    var c=k.replace('_','.'),v=d.results[k];
+    if(ITEM_BY_CODE[c]&&typeof v==='string'&&/^[N+-]{1,3}$/.test(v)){
+      r[c]=(hasF(v,'N')?'N':'')+(hasF(v,'+')?'+':'')+(hasF(v,'-')?'-':'');
+    }
+  });
+  return {id:id,horse:typeof d.horse==='string'?d.horse:'',species:normSp(d.species),date:typeof d.date==='string'&&d.date?d.date:today(),
+    results:r,note:typeof d.note==='string'?d.note:'',updated:+d.updated||0,persisted:true,touchedAt:0};
+}
+var ITEM_BY_CODE={};ALL.forEach(function(i){ITEM_BY_CODE[i.code]=i});
+
+function setSave(x){
+  st.save=x;
+  var el=$('#sv'); if(el) el.textContent={idle:'',saving:'Speichert …',ok:'Gespeichert',err:'Nicht gespeichert'}[x]||'';
+}
+function touch(s){
+  s.persisted=true;s.touchedAt=Date.now();s.updated=Date.now();
+  dirty.add(s.id);setSave('saving');
+  clearTimeout(timers[s.id]);
+  timers[s.id]=setTimeout(function(){flush(s.id)},600);
+}
+async function flush(id){
+  if(!store.ready||writing[id]){timers[id]=setTimeout(function(){flush(id)},400);return}
+  var s=st.sessions[id]; if(!s){dirty.delete(id);return}
+  dirty.delete(id);writing[id]=true;
+  try{
+    await store.save(s);
+    if(!dirty.size) setSave('ok');
+  }catch(e){
+    dirty.add(id);setSave('err');
+  }finally{
+    writing[id]=false;
+  }
+}
+
+function applyRemote(docs){
+  var seen={};
+  docs.forEach(function(d){
+    var id=d.id;seen[id]=1;
+    if(dirty.has(id)||writing[id]) return;
+    var data=d.data()||{};
+    st.sessions[id]=fromDoc(id,data);
+  });
+  Object.keys(st.sessions).forEach(function(id){
+    var s=st.sessions[id];
+    if(s.persisted&&!seen[id]&&!dirty.has(id)&&!writing[id]&&Date.now()-s.touchedAt>8000) delete st.sessions[id];
+  });
+  if(firstSync){
+    firstSync=false;
+    var c=cur();
+    if(isPristine(c)){
+      var want=LS.get('tb-current'),pick=null;
+      if(want&&st.sessions[want]&&st.sessions[want].persisted) pick=want;
+      else{var l=savedList();if(l.length) pick=l[0].id}
+      if(pick){delete st.sessions[c.id];st.cur=pick}
+    }
+  }
+  if(!cur()){
+    var l2=savedList();
+    if(l2.length) st.cur=l2[0].id; else st.cur=newSession().id;
+  }
+  var ae=document.activeElement;
+  if(st.editing&&ae&&/^e-/.test(ae.id||'')){syncHeader();renderBar()} else renderAll();
+}
+
+function useLocal(){
+  st.storage='local';
+  function readAll(){try{return JSON.parse(LS.get('tb-sessions')||'{}')||{}}catch(e){return {}}}
+  store.save=async function(s){
+    var all=readAll();all[s.id]=payload(s);
+    if(!LS.set('tb-sessions',JSON.stringify(all))) throw new Error('local');
+  };
+  store.remove=async function(id){var all=readAll();delete all[id];LS.set('tb-sessions',JSON.stringify(all))};
+  store.ready=true;
+  var all=readAll();
+  applyRemote(Object.keys(all).map(function(id){return {id:id,data:function(){return all[id]}}}));
+}
+
+async function init(){
+  var db=null,user=null;
+  try{
+    if(window.claude&&window.claude.use){
+      db=await window.claude.use('db');
+      user=await window.claude.use('user');
+      st.dl=await window.claude.use('downloads');
+    }
+  }catch(e){}
+  var id=null;
+  try{if(db&&user) id=await user.id()}catch(e){}
+  if(db&&id){
+    st.storage='db';
+    var col=db.collection('patients');
+    store.save=function(s){return col.doc(s.id).set(payload(s))};
+    store.remove=function(sid){return col.doc(sid).delete()};
+    store.ready=true;
+    col.onSnapshot(function(snap){applyRemote(snap.docs)},function(){
+      if(st.storage==='db'){firstSync=false;useLocal()}
+    });
+    /* Einmalig: frühere private Einträge dieses Nutzers in die gemeinsame Liste übernehmen */
+    try{
+      var old=db.collection('data/users/'+id),snap0=await old.get();
+      for(var i=0;i<snap0.docs.length;i++){
+        var d0=snap0.docs[i];
+        await col.doc(d0.id).set(d0.data());
+        await old.doc(d0.id).delete();
+      }
+    }catch(e){}
+  }else{
+    useLocal();
+  }
+}
+
+/* ---------- Darstellung ---------- */
+function syncHeader(){
+  var s=cur(),h=$('#horse'),d=$('#date'),ed=st.newId===s.id;
+  h.hidden=!ed;d.hidden=!ed;$('.sp').hidden=!ed;$('#whoro').hidden=ed;
+  $('#whoro').innerHTML='<span class="sbadge" style="margin:0;background:var(--spc);color:var(--bg)">'+spName(s)+'</span><span class="wn">'+esc(s.horse||spName(s)+' ohne Namen')+'</span><span class="wd">'+fmtDate(s.date)+'</span>';
+  if(document.activeElement!==h) h.value=s.horse;
+  h.placeholder='Name '+({pferd:'des Pferdes',hund:'des Hundes',katze:'der Katze'})[spOf(s)];
+  document.body.setAttribute('data-sp',spOf(s));
+  $$('.who .sp button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.species===spOf(s)?'true':'false')});
+  if(document.activeElement!==d) d.value=s.date;
+  updateTabs();
+}
+function updateTabs(){
+  var s=cur(),kp=sysKey('phys',s),ka=sysKey('path',s),ps=stats(s,SYSITEMS[kp]),pa=stats(s,SYSITEMS[ka]),sd=stats(s,SYSITEMS.std),t=stats(s);
+  $('#l-phys').textContent='Physio '+spName(s);$('#l-path').textContent='Patho '+spName(s);
+  $('#c-phys').textContent=ps.done+'/'+SYSITEMS[kp].length;
+  $('#c-path').textContent=pa.done+'/'+SYSITEMS[ka].length;
+  $('#c-std').textContent=sd.done+'/'+SYSITEMS.std.length;
+  $('#c-sum').textContent='+'+t.pos+' −'+t.neg+(t.bip?' ±'+t.bip:'');
+  $('#c-sess').textContent=String(savedList().length);
+  $$('.tab').forEach(function(b){b.setAttribute('aria-selected',b.dataset.view===st.view?'true':'false')});
+}
+function renderBar(){
+  var s=cur(),t=stats(s),tot=itemsOf(s).length;
+  $('#b-done').textContent=t.done+' / '+tot+' getestet';
+  $('#b-p').textContent='+ '+t.pos;
+  $('#b-m').textContent='− '+t.neg;
+  var bb=$('#b-b');bb.textContent='± '+t.bip;bb.hidden=!t.bip;
+  $('#b-n').textContent='N '+t.n;
+  $('#progfill').style.width=Math.round(t.done/tot*100)+'%';
+  var pg=$('#prog');pg.setAttribute('aria-valuemax',String(tot));pg.setAttribute('aria-valuenow',String(t.done));
+  setSave(st.save);
+}
+function refreshAll(){updateTabs();renderBar();updateChips()}
+function renderAll(){syncHeader();renderMain();renderBar()}
+
+function rowHtml(it,v,ctx){
+  var btns=['N','+','-'].map(function(x){
+    return '<button type="button" data-code="'+it.code+'" data-v="'+x+'" aria-pressed="'+(hasF(v,x)?'true':'false')+'" aria-label="'+LBL[x]+'">'+SYM[x]+'</button>';
+  }).join('');
+  var cls='lbl'+(ctx?'':' lv'+Math.min(it.lvl||0,2))+(it.head?' hd':'');
+  return '<div class="row" data-row="'+it.code+'" data-state="'+rowState(v)+'"><div class="'+cls+'"><span class="code">'+it.code+(ctx?' · '+esc(it.gname):'')+'</span><span class="name">'+esc(it.name)+'</span></div><div class="seg" role="group" aria-label="'+esc(it.code+' '+it.name)+'">'+btns+'</div></div>';
+}
+function groupRight(g,s){
+  var t=stats(s,g.items),h='';
+  if(t.pos) h+='<span class="gb gb-p">+'+t.pos+'</span>';
+  if(t.neg) h+='<span class="gb gb-m">−'+t.neg+'</span>';
+  if(t.bip) h+='<span class="gb gb-b">±'+t.bip+'</span>';
+  return h+'<span class="gc">'+t.done+'/'+g.items.length+'</span>';
+}
+function groupHtml(g,items,s,open,acts){
+  if(g.items.length===1){
+    return '<div class="grp single">'+rowHtml(items[0],s.results[items[0].code],false)+'</div>';
+  }
+  var first=g.items[0].code,last=g.items[g.items.length-1].code;
+  var h='<details class="grp" data-g="'+g.key+'"'+(open?' open':'')+'><summary><span class="gl"><span class="gname">'+esc(g.name)+'</span><span class="grange">'+first+' – '+last+'</span></span><span class="gright">'+groupRight(g,s)+'</span><span class="chev" aria-hidden="true"></span></summary>';
+  if(acts) h+='<div class="gacts"><button type="button" class="btn sm" data-act="fillN" data-g="'+g.key+'">Offene auf N setzen</button><button type="button" class="btn sm" data-act="clearG" data-g="'+g.key+'">Gruppe leeren</button></div>';
+  items.forEach(function(it){h+=rowHtml(it,s.results[it.code],false)});
+  return h+'</details>';
+}
+function toolsHtml(){
+  return '<div class="tools"><input id="q" class="field" type="search" placeholder="Suchen: Nummer oder Begriff" value="'+esc(st.q)+'" aria-label="Suchen" autocomplete="off" autocapitalize="off" spellcheck="false">'
+    +'<div class="chips" role="group" aria-label="Filter"><button type="button" class="chip" id="chip-all" data-filter="all"></button><button type="button" class="chip" id="chip-open" data-filter="open"></button><button type="button" class="chip" id="chip-flag" data-filter="flag"></button></div>'
+    +'<p class="legend"><span><span class="lg lg-n">N</span>normal</span><span><span class="lg lg-p">+</span>positiv</span><span><span class="lg lg-m">−</span>negativ</span><span>+ und − zusammen: bipolar</span></p></div>';
+}
+function updateChips(){
+  var items=SYSITEMS[sysKey(st.view)]; if(!items) return;
+  var a=$('#chip-all'); if(!a) return;
+  var s=cur(),open=0,flag=0;
+  items.forEach(function(it){var v=s.results[it.code]; if(!v) open++; else if(classify(v)) flag++});
+  a.textContent='Alle '+items.length;
+  $('#chip-open').textContent='Offen '+open;
+  $('#chip-flag').textContent='Auffällig '+flag;
+  [['all','#chip-all'],['open','#chip-open'],['flag','#chip-flag']].forEach(function(p){
+    $(p[1]).setAttribute('aria-pressed',st.filter===p[0]?'true':'false');
+  });
+}
+function match(it,s,q,f){
+  var v=s.results[it.code];
+  if(f==='open'&&v) return false;
+  if(f==='flag'&&!classify(v)) return false;
+  if(q&&it.code.indexOf(q)<0&&it.name.toLowerCase().indexOf(q)<0&&it.gname.toLowerCase().indexOf(q)<0) return false;
+  return true;
+}
+function renderList(){
+  var s=cur(),q=st.q.trim().toLowerCase(),f=st.filter,searching=!!q||f!=='all',html='',shown=0;
+  GROUPS[sysKey(st.view)].forEach(function(g){
+    var items=g.items.filter(function(it){return match(it,s,q,f)});
+    if(!items.length) return;
+    shown+=items.length;
+    html+=groupHtml(g,items,s,searching||st.open[g.key],!searching);
+  });
+  if(!shown){
+    html='<div class="empty"><p>'+(q?'Nichts gefunden für „'+esc(st.q.trim())+'“.':(f==='open'?'Alles in diesem Bereich ist getestet.':'Noch keine auffälligen Einträge in diesem Bereich.'))+'</p>'
+      +'<button type="button" class="btn" data-act="clearQ">Suche und Filter zurücksetzen</button></div>';
+  }
+  $('#list').innerHTML=html;
+  updateChips();
+}
+function updateGroup(gkey){
+  var g=GBY[gkey],el=$('details[data-g="'+gkey+'"] .gright');
+  if(g&&el) el.innerHTML=groupRight(g,cur());
+}
+function refreshRow(code){
+  var s=cur(),v=s.results[code]||'';
+  $$('[data-row="'+code+'"]').forEach(function(r){
+    r.setAttribute('data-state',rowState(v));
+    $$('button',r).forEach(function(b){b.setAttribute('aria-pressed',hasF(v,b.dataset.v)?'true':'false')});
+  });
+}
+
+function buildText(s){
+  var t=stats(s),L=[];
+  L.push('Bioresonanz Test – '+spName(s));
+  L.push(spName(s)+': '+(s.horse||'ohne Namen')+' · '+fmtDate(s.date));
+  L.push('Getestet: '+t.done+' von '+itemsOf(s).length+' · positiv (+): '+t.pos+' · negativ (−): '+t.neg+' · bipolar (+ und −): '+t.bip+' · mit N markiert: '+t.n);
+  L.push('');
+  var arr=flaggedList(s);
+  L.push('AUFFÄLLIG (nach Nummer) – '+arr.length);
+  if(arr.length) arr.forEach(function(i){var c=classify(s.results[i.code]);L.push(i.code+'  '+i.name+'  ['+SYSNAME[i.sys]+' · '+i.gname+']  '+(c==='b'?'+ und −':c==='p'?'+':'−')+(hasF(s.results[i.code],'N')?' (auch N)':''))});
+  else L.push('keine');
+  L.push('');
+  if(s.note.trim()){L.push('Notiz');L.push(s.note.trim())}
+  return L.join('\n').trim();
+}
+function findingsHtml(s){
+  var t=stats(s),h='';
+  if(!t.done){
+    return '<div class="empty"><p>Noch nichts getestet. Wähle bei jedem Programm N, + oder −.</p><button type="button" class="btn primary" data-act="goPhys">Zum Standard</button></div>';
+  }
+  var arr=flaggedList(s);
+  if(arr.length){
+    h+='<h3>Auffällig<span class="cnt">'+arr.length+'</span></h3>';
+    h+='<div class="grp">'+arr.map(function(i){return rowHtml(i,s.results[i.code],true)}).join('')+'</div>';
+  }
+  if(!h) h='<p class="none">Keine auffälligen Einträge. Alle bewerteten Programme sind nur mit N markiert.</p>';
+  return h;
+}
+function renderFindings(){
+  var s=cur(),f=$('#find'); if(!f) return;
+  f.innerHTML=findingsHtml(s);
+  var e=$('#exp'); if(e) e.value=buildText(s);
+}
+function renderSummary(){
+  var s=cur();
+  $('#main').innerHTML='<section class="panel"><div><h2>Auswertung</h2><p class="meta">'+esc(s.horse||spName(s)+' ohne Namen')+' · '+fmtDate(s.date)+'</p></div>'
+    +'<div class="stack" id="find"></div>'
+    +'<div class="stack"><label class="lab" for="note">Notiz zum Test</label><textarea id="note" class="field" rows="3" placeholder="Beobachtungen, Futter, Wetter …">'+esc(s.note)+'</textarea></div>'
+    +'<div class="stack"><label class="lab" for="exp">Zum Weitergeben</label><textarea id="exp" class="field" rows="10" readonly></textarea>'
+    +'<div class="btnrow"><button type="button" class="btn primary" data-act="pdf"'+(st.dl?'':' hidden')+'>Liste als PDF (zum Drucken)</button>'
+    +'<button type="button" class="btn primary" data-act="print"'+(st.dl?' hidden':'')+'>Liste drucken</button>'
+    +'<button type="button" class="btn" data-act="copy">Text kopieren</button>'
+    +'<button type="button" class="btn" data-act="save"'+(st.dl?'':' hidden')+'>Textdatei</button></div>'
+    +'<p class="msg" id="msg" role="status"></p></div></section>';
+  renderFindings();
+}
+function sessRow(s){
+  var sp=spOf(s),t=stats(s),meta=fmtDate(s.date)+' · '+t.done+'/'+itemsOf(s).length+' getestet'+((t.pos||t.neg||t.bip)?' · + '+t.pos+' · − '+t.neg+(t.bip?' · ± '+t.bip:''):'');
+  var h='<div class="srow'+(s.id===st.cur?' cur':'')+'" data-sp="'+sp+'">';
+  if(st.editing===s.id){
+    h+='<div class="erow"><input id="e-name" class="field" type="text" value="'+esc(s.horse)+'" placeholder="Name" aria-label="Name des Patienten" autocomplete="off"><input id="e-date" class="field" type="date" value="'+esc(s.date)+'" aria-label="Datum"></div>'
+      +'<div class="sp" role="group" aria-label="Tierart"><button type="button" data-esp="pferd" aria-pressed="'+(sp==='pferd')+'">Pferd</button><button type="button" data-esp="hund" aria-pressed="'+(sp==='hund')+'">Hund</button><button type="button" data-esp="katze" aria-pressed="'+(sp==='katze')+'">Katze</button></div>'
+      +'<div class="sacts"><button type="button" class="btn sm primary" data-act="edone">Fertig</button></div></div>';
+    return h;
+  }
+  h+='<button type="button" class="sopen" data-act="open" data-id="'+s.id+'"><span class="sbadge">'+spName(s)+'</span><span class="sh">'+esc(s.horse||spName(s)+' ohne Namen')+'</span><span class="sm">'+esc(meta)+'</span></button>';
+  if(st.conf===s.id){
+    h+='<div class="sacts"><span class="warn">Diesen Patienten endgültig löschen?</span><button type="button" class="btn sm danger" data-act="delyes" data-id="'+s.id+'">Löschen</button><button type="button" class="btn sm" data-act="delno">Abbrechen</button></div>';
+  }else{
+    h+='<div class="sacts"><button type="button" class="btn sm" data-act="edit" data-id="'+s.id+'">Bearbeiten</button><button type="button" class="btn sm" data-act="again" data-id="'+s.id+'">Neu testen</button><button type="button" class="btn sm" data-act="del" data-id="'+s.id+'">Löschen</button></div>';
+  }
+  return h+'</div>';
+}
+function renderSessions(){
+  var list=savedList();
+  var h='<section class="panel"><div><h2>Patienten</h2><p class="meta">Neuen Patienten anlegen oder einen gespeicherten öffnen. „Neu testen“ übernimmt Name und Tierart.</p></div>'
+    +'<div class="btnrow"><button type="button" class="btn primary sp-pferd" data-act="new" data-sp="pferd">Neues Pferd</button><button type="button" class="btn primary sp-hund" data-act="new" data-sp="hund">Neuer Hund</button><button type="button" class="btn primary sp-katze" data-act="new" data-sp="katze">Neue Katze</button></div>';
+  if(st.storage==='local') h+='<p class="warn">Die Tests werden nur in diesem Browser gespeichert.</p>';
+  else if(st.storage==='db') h+='<p class="meta">Gemeinsame Liste: Alle mit Zugriff sehen und ändern dieselben Patienten.</p>';
+  h+='<div class="stack">';
+  if(list.length) h+=list.map(sessRow).join('');
+  else h+='<div class="empty"><p>Noch kein Patient gespeichert. Sobald du einen Namen einträgst oder ein Programm bewertest, erscheint er hier.</p></div>';
+  $('#main').innerHTML=h+'</div></section>';
+}
+function renderMain(){
+  var v=st.view;
+  if(v==='phys'||v==='path'||v==='std'){$('#main').innerHTML=toolsHtml()+'<div id="list"></div>';renderList()}
+  else if(v==='sum') renderSummary();
+  else renderSessions();
+}
+function setView(v){
+  if(v!==st.view) st.newId=null;
+  st.view=v;st.conf=null;
+  syncHeader();renderMain();updateTabs();
+  window.scrollTo(0,0);
+}
+
+/* ---------- Aktionen ---------- */
+function startNew(horse,species){
+  dropPristine();
+  var s=newSession(horse,species);
+  st.cur=s.id;LS.set('tb-current',s.id);st.newId=s.id;st.editing=null;
+  st.view='std';st.q='';st.filter='all';st.conf=null;
+  renderAll();window.scrollTo(0,0);
+}
+function openSession(id){
+  if(!st.sessions[id]) return;
+  if(id!==st.cur) dropPristine();
+  st.cur=id;LS.set('tb-current',id);st.newId=null;st.editing=null;
+  st.view='std';st.q='';st.filter='all';st.conf=null;
+  renderAll();window.scrollTo(0,0);
+}
+function removeSession(id){
+  clearTimeout(timers[id]);dirty.delete(id);
+  var was=id===st.cur;
+  delete st.sessions[id];st.conf=null;
+  if(was){
+    var l=savedList();
+    st.cur=l.length?l[0].id:newSession().id;
+    LS.set('tb-current',st.cur);
+  }
+  renderAll();
+  Promise.resolve().then(function(){return store.remove(id)}).catch(function(){setSave('err')});
+}
+function msg(t){var m=$('#msg'); if(m) m.textContent=t}
+async function copyExp(){
+  var ta=$('#exp'); if(!ta) return;
+  try{await navigator.clipboard.writeText(ta.value);msg('Kopiert.')}
+  catch(e){ta.focus();ta.select();msg('Text ist markiert. Zum Kopieren lange drücken.')}
+}
+async function saveFile(){
+  var s=cur(); if(!st.dl) return;
+  var name=('Test_'+(s.horse||spName(s))+'_'+s.date).replace(/[^A-Za-z0-9äöüÄÖÜß_-]+/g,'_')+'.txt';
+  try{await st.dl.save({filename:name,data:buildText(s)});msg('Datei gesichert.')}
+  catch(e){msg(e&&e.code==='declined'?'Abgebrochen.':'Sichern ist hier nicht möglich. Nutze „Text kopieren“.')}
+}
+/* Druckliste: alle auffälligen Programme (+, − oder beides) mit Kästchen N, + und − als PDF.
+   Der Seitendruck ist in der App gesperrt, darum wird eine PDF-Datei zum Sichern angeboten. */
+function buildPdf(s){
+  var J=window.jspdf&&window.jspdf.jsPDF; if(!J) return null;
+  var doc=new J({unit:'mm',format:'a4'});
+  var M=15,PW=210,PH=297,BOT=PH-18,TW=179,LH=3.65;
+  var cw=[17,80,52,10,10,10],cx=[M];
+  for(var i=0;i<cw.length;i++) cx.push(cx[i]+cw[i]);
+  var t=stats(s),flagged=t.pos+t.neg+t.bip,y=M;
+  doc.setFont('helvetica','bold');doc.setFontSize(16);doc.setTextColor(0);
+  doc.text('Bioresonanz Test – '+spName(s),M,y+5);y+=12;
+  doc.setFont('helvetica','normal');doc.setFontSize(10.5);
+  doc.text(spName(s)+': '+(s.horse||'ohne Namen')+'     Datum: '+fmtDate(s.date),M,y);y+=5.5;
+  doc.text('Auffällig: '+flagged+' (positiv '+t.pos+', negativ '+t.neg+', bipolar '+t.bip+')     Getestet: '+t.done+' von '+itemsOf(s).length,M,y);y+=8;
+  function head(){
+    doc.setFillColor(228,228,228);doc.rect(M,y,TW,6,'F');
+    doc.setFont('helvetica','bold');doc.setFontSize(8.5);doc.setTextColor(0);
+    doc.text('Nr.',cx[0]+1,y+4.2);doc.text('Programm',cx[1]+1,y+4.2);doc.text('Bereich',cx[2]+1,y+4.2);
+    doc.text('N',cx[3]+5,y+4.2,{align:'center'});doc.text('+',cx[4]+5,y+4.2,{align:'center'});doc.text('-',cx[5]+5,y+4.2,{align:'center'});
+    y+=6;
+  }
+  var any=false;
+  var items=flaggedList(s);
+  if(items.length){
+    any=true;head();
+    items.forEach(function(it){
+      var v=s.results[it.code];
+      doc.setFont('helvetica','normal');doc.setFontSize(9);
+      var a=doc.splitTextToSize(it.name,cw[1]-2),b=doc.splitTextToSize(SYSNAME[it.sys]+' · '+it.gname,cw[2]-2);
+      var rh=Math.max(a.length,b.length,1)*LH+3;
+      if(y+rh>BOT){doc.addPage();y=M;head()}
+      doc.setTextColor(0);
+      doc.text(it.code,cx[0]+1,y+4);doc.text(a,cx[1]+1,y+4);doc.text(b,cx[2]+1,y+4);
+      [hasF(v,'N'),hasF(v,'+'),hasF(v,'-')].forEach(function(on,k){
+        var bx=cx[3+k]+3,by=y+1.3;
+        doc.setDrawColor(90);doc.setLineWidth(.2);doc.rect(bx,by,4,4);
+        if(on){doc.setLineWidth(.5);doc.setDrawColor(0);doc.line(bx+.8,by+.8,bx+3.2,by+3.2);doc.line(bx+3.2,by+.8,bx+.8,by+3.2)}
+      });
+      doc.setDrawColor(200);doc.setLineWidth(.15);doc.line(M,y+rh,M+TW,y+rh);
+      y+=rh;
+    });
+  }
+  if(!any){doc.setFont('helvetica','normal');doc.setFontSize(10.5);doc.text('Keine auffälligen Werte.',M,y+4);y+=8}
+  var note=(s.note||'').trim();
+  if(note){
+    if(y+14>BOT){doc.addPage();y=M}
+    y+=3;doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(0);doc.text('Notiz',M,y+4);y+=7;
+    doc.setFont('helvetica','normal');doc.setFontSize(9.5);
+    doc.splitTextToSize(note,TW).forEach(function(line){
+      if(y+5>BOT){doc.addPage();y=M}
+      doc.text(line,M,y+3.5);y+=4.6;
+    });
+  }
+  var pages=doc.getNumberOfPages();
+  for(var p=1;p<=pages;p++){
+    doc.setPage(p);doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(110);
+    doc.text((s.horse||spName(s)+' ohne Namen')+' - '+fmtDate(s.date),M,PH-9);
+    doc.text('Seite '+p+' / '+pages,PW-M,PH-9,{align:'right'});
+  }
+  return doc.output('arraybuffer');
+}
+function printHtml(s){
+  var t=stats(s),items=flaggedList(s),h='<h1>Bioresonanz Test \u2013 '+esc(spName(s))+'</h1>'
+    +'<p><b>'+esc(spName(s))+':</b> '+esc(s.horse||'ohne Namen')+' &nbsp; <b>Datum:</b> '+esc(fmtDate(s.date))+'</p>'
+    +'<p>Auff\u00e4llig: '+items.length+' (positiv '+t.pos+', negativ '+t.neg+', bipolar '+t.bip+') &nbsp; Getestet: '+t.done+' von '+itemsOf(s).length+'</p>';
+  if(!items.length) return h+'<p>Keine auff\u00e4lligen Werte.</p>';
+  h+='<table><thead><tr><th>Nr.</th><th>Programm</th><th>Bereich</th><th class="c">N</th><th class="c">+</th><th class="c">\u2212</th></tr></thead><tbody>';
+  items.forEach(function(it){
+    var v=s.results[it.code];
+    function bx(x){return '<span class="bx">'+(hasF(v,x)?'X':'')+'</span>'}
+    h+='<tr><td>'+it.code+'</td><td>'+esc(it.name)+'</td><td>'+esc(SYSNAME[it.sys]+' \u00b7 '+it.gname)+'</td><td class="c">'+bx('N')+'</td><td class="c">'+bx('+')+'</td><td class="c">'+bx('-')+'</td></tr>';
+  });
+  h+='</tbody></table>';
+  var note=(s.note||'').trim();
+  if(note) h+='<p style="margin-top:5mm"><b>Notiz</b><br>'+esc(note).replace(/\n/g,'<br>')+'</p>';
+  return h;
+}
+function printList(){
+  var pa=$('#printarea'); if(!pa) return;
+  pa.innerHTML=printHtml(cur());
+  try{window.print()}catch(e){msg('Drucken ist hier nicht m\u00f6glich.')}
+}
+async function savePdf(){
+  var s=cur(); if(!st.dl){msg('Sichern ist hier nicht möglich. Nutze „Text kopieren“.');return}
+  var buf=null;
+  try{buf=buildPdf(s)}catch(e){buf=null}
+  if(!buf){msg('Die PDF-Erstellung ist hier nicht verfügbar. Nutze „Text kopieren“.');return}
+  var name=('Auffaellige_'+(s.horse||spName(s))+'_'+s.date).replace(/[^A-Za-z0-9äöüÄÖÜß_-]+/g,'_')+'.pdf';
+  try{await st.dl.save({filename:name,data:buf});msg('PDF gesichert. Öffne die Datei und drucke sie von dort.')}
+  catch(e){msg(e&&e.code==='declined'?'Abgebrochen.':'Sichern ist hier nicht möglich. Nutze „Text kopieren“.')}
+}
+function act(b){
+  var a=b.dataset.act,id=b.dataset.id,g=b.dataset.g,s=cur();
+  if(a==='fillN'){GBY[g].items.forEach(function(it){if(!s.results[it.code]) s.results[it.code]='N'});touch(s);renderList();refreshAll()}
+  else if(a==='clearG'){GBY[g].items.forEach(function(it){delete s.results[it.code]});touch(s);renderList();refreshAll()}
+  else if(a==='new') startNew('',b.dataset.sp);
+  else if(a==='again') startNew(st.sessions[id]?st.sessions[id].horse:'',st.sessions[id]?spOf(st.sessions[id]):'pferd');
+  else if(a==='open') openSession(id);
+  else if(a==='del'){st.conf=id;renderSessions()}
+  else if(a==='delno'){st.conf=null;renderSessions()}
+  else if(a==='edit'){st.editing=id;st.conf=null;renderSessions()}
+  else if(a==='edone'){st.editing=null;renderSessions();syncHeader()}
+  else if(a==='delyes') removeSession(id);
+  else if(a==='copy') copyExp();
+  else if(a==='save') saveFile();
+  else if(a==='pdf') savePdf();
+  else if(a==='print') printList();
+  else if(a==='goPhys') setView('std');
+  else if(a==='clearQ'){st.q='';st.filter='all';renderMain()}
+}
+
+document.addEventListener('click',function(e){
+  var b=e.target.closest('button'); if(!b) return;
+  if(b.dataset.code){
+    var s=cur(),c=b.dataset.code,nv=toggleFlag(s.results[c],b.dataset.v);
+    if(nv) s.results[c]=nv; else delete s.results[c];
+    touch(s);
+    if(st.view==='sum') renderFindings();
+    else{refreshRow(c);updateGroup(ITEM_BY_CODE[c].gkey)}
+    refreshAll();
+  }
+  else if(b.dataset.esp){
+    var s3=st.sessions[st.editing]; if(!s3||spOf(s3)===b.dataset.esp) return;
+    s3.species=b.dataset.esp;touch(s3);renderAll();
+  }
+  else if(b.dataset.species){
+    var s2=cur(); if(spOf(s2)===b.dataset.species) return;
+    s2.species=b.dataset.species;
+    if(!isPristine(s2)) touch(s2);
+    renderAll();
+  }
+  else if(b.dataset.view) setView(b.dataset.view);
+  else if(b.dataset.filter){st.filter=b.dataset.filter;renderList()}
+  else if(b.dataset.act) act(b);
+});
+document.addEventListener('input',function(e){
+  var t=e.target,s=cur();
+  if(t.id==='horse'){s.horse=t.value;touch(s);updateTabs()}
+  else if(t.id==='date'){if(t.value){s.date=t.value;touch(s)}}
+  else if(t.id==='e-name'){var e1=st.sessions[st.editing];if(e1){e1.horse=t.value;touch(e1);syncHeader()}}
+  else if(t.id==='e-date'){var e2=st.sessions[st.editing];if(e2&&t.value){e2.date=t.value;touch(e2);syncHeader()}}
+  else if(t.id==='note'){s.note=t.value;touch(s);var x=$('#exp');if(x) x.value=buildText(s)}
+  else if(t.id==='q'){st.q=t.value;renderList()}
+});
+document.addEventListener('toggle',function(e){
+  var d=e.target;
+  if(d&&d.matches&&d.matches('details[data-g]')) st.open[d.dataset.g]=d.open;
+},true);
+
+/* ---------- Start ---------- */
+(function(){
+  var s=newSession('');st.cur=s.id;
+  renderAll();
+  init();
+})();
+})();
+</script>
+
+</body></html>
